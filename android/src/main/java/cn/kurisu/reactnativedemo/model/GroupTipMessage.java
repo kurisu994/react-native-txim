@@ -7,7 +7,7 @@ import com.tencent.imsdk.TIMMessage;
 import java.util.Iterator;
 import java.util.Map;
 
-import cn.kurisu.reactnativedemo.MainApplication;
+import cn.kurisu.reactnativedemo.IMApplication;
 import cn.kurisu.reactnativedemo.R;
 
 /**
@@ -32,7 +32,7 @@ public class GroupTipMessage extends Message {
         switch (e.getTipsType()) {
             case CancelAdmin:
             case SetAdmin:
-                return MainApplication.getContext().getString(R.string.summary_group_admin_change);
+                return IMApplication.getContext().getString(R.string.summary_group_admin_change);
             case Join:
                 while (iterator.hasNext()) {
                     Map.Entry<String, TIMGroupMemberInfo> item = iterator.next();
@@ -40,10 +40,10 @@ public class GroupTipMessage extends Message {
                     stringBuilder.append(" ");
                 }
                 return stringBuilder +
-                        MainApplication.getContext().getString(R.string.summary_group_mem_add);
+                        IMApplication.getContext().getString(R.string.summary_group_mem_add);
             case Kick:
                 return e.getUserList().get(0) +
-                        MainApplication.getContext().getString(R.string.summary_group_mem_kick);
+                        IMApplication.getContext().getString(R.string.summary_group_mem_kick);
             case ModifyMemberInfo:
                 while (iterator.hasNext()) {
                     Map.Entry<String, TIMGroupMemberInfo> item = iterator.next();
@@ -51,12 +51,12 @@ public class GroupTipMessage extends Message {
                     stringBuilder.append(" ");
                 }
                 return stringBuilder +
-                        MainApplication.getContext().getString(R.string.summary_group_mem_modify);
+                        IMApplication.getContext().getString(R.string.summary_group_mem_modify);
             case Quit:
                 return e.getOpUser() +
-                        MainApplication.getContext().getString(R.string.summary_group_mem_quit);
+                        IMApplication.getContext().getString(R.string.summary_group_mem_quit);
             case ModifyGroupInfo:
-                return MainApplication.getContext().getString(R.string.summary_group_info_change);
+                return IMApplication.getContext().getString(R.string.summary_group_info_change);
         }
         return "";
     }

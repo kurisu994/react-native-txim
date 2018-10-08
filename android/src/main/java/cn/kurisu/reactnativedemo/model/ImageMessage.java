@@ -16,7 +16,7 @@ import com.tencent.imsdk.TIMMessage;
 
 import java.io.IOException;
 
-import cn.kurisu.reactnativedemo.MainApplication;
+import cn.kurisu.reactnativedemo.IMApplication;
 import cn.kurisu.reactnativedemo.R;
 import cn.kurisu.reactnativedemo.utils.FileUtil;
 
@@ -58,7 +58,7 @@ public class ImageMessage extends Message {
     public String getSummary() {
         String str = getRevokeSummary();
         if (str != null) return str;
-        return MainApplication.getContext().getString(R.string.summary_image);
+        return IMApplication.getContext().getString(R.string.summary_image);
     }
 
     /**
@@ -71,7 +71,7 @@ public class ImageMessage extends Message {
             if (image.getType() == TIMImageType.Original) {
                 final String uuid = image.getUuid();
                 if (FileUtil.isCacheFileExist(uuid + ".jpg")) {
-                    Toast.makeText(MainApplication.getContext(), MainApplication.getContext().getString(R.string.save_exist), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(IMApplication.getContext(), IMApplication.getContext().getString(R.string.save_exist), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 image.getImage(FileUtil.getCacheFilePath(uuid + ".jpg"), new TIMCallBack() {
@@ -82,7 +82,7 @@ public class ImageMessage extends Message {
 
                     @Override
                     public void onSuccess() {
-                        Toast.makeText(MainApplication.getContext(), MainApplication.getContext().getString(R.string.save_succ), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(IMApplication.getContext(), IMApplication.getContext().getString(R.string.save_succ), Toast.LENGTH_SHORT).show();
                     }
                 });
             }

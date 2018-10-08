@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
-import cn.kurisu.reactnativedemo.MainApplication;
+import cn.kurisu.reactnativedemo.IMApplication;
 import cn.kurisu.reactnativedemo.R;
 import cn.kurisu.reactnativedemo.event.GroupEvent;
 import cn.kurisu.reactnativedemo.event.RefreshEvent;
@@ -181,11 +181,11 @@ public class GroupInfo implements Observer {
 
     public static String getTypeName(String type) {
         if (type.equals(GroupInfo.publicGroup)) {
-            return MainApplication.getContext().getString(R.string.public_group);
+            return IMApplication.getContext().getString(R.string.public_group);
         } else if (type.equals(GroupInfo.privateGroup)) {
-            return MainApplication.getContext().getString(R.string.discuss_group);
+            return IMApplication.getContext().getString(R.string.discuss_group);
         } else if (type.equals(GroupInfo.chatRoom)) {
-            return MainApplication.getContext().getString(R.string.chatroom);
+            return IMApplication.getContext().getString(R.string.chatroom);
         }
         return "";
     }

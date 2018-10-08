@@ -9,7 +9,7 @@ import com.tencent.imsdk.ext.ugc.TIMUGCVideo;
 
 import java.io.File;
 
-import cn.kurisu.reactnativedemo.MainApplication;
+import cn.kurisu.reactnativedemo.IMApplication;
 import cn.kurisu.reactnativedemo.R;
 
 /**
@@ -61,7 +61,7 @@ public class UGCMessage extends Message {
     public String getSummary() {
         String str = getRevokeSummary();
         if (str != null) return str;
-        return MainApplication.getContext().getString(R.string.summary_video);
+        return IMApplication.getContext().getString(R.string.summary_video);
     }
 
     /**

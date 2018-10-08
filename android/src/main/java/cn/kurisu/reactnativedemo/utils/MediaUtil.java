@@ -4,7 +4,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.util.Log;
 
-import cn.kurisu.reactnativedemo.MainApplication;
+import cn.kurisu.reactnativedemo.IMApplication;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -70,7 +70,7 @@ public class MediaUtil {
     }
 
     public long getDuration(String path){
-        player = MediaPlayer.create(MainApplication.getContext(), Uri.parse(path));
+        player = MediaPlayer.create(IMApplication.getContext(), Uri.parse(path));
         return player.getDuration();
     }
 

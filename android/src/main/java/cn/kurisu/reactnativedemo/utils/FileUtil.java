@@ -17,7 +17,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import cn.kurisu.reactnativedemo.MainApplication;
+import cn.kurisu.reactnativedemo.IMApplication;
 
 /**
  * 文件工具类
@@ -26,7 +26,7 @@ public class FileUtil {
 
     private static final String TAG = "FileUtil";
     private static String pathDiv = "/";
-    private static File cacheDir = !isExternalStorageWritable() ? MainApplication.getContext().getFilesDir() : MainApplication.getContext().getExternalCacheDir();
+    private static File cacheDir = !isExternalStorageWritable() ? IMApplication.getContext().getFilesDir() : IMApplication.getContext().getExternalCacheDir();
 
     private FileUtil() {
         /* cannot be instantiated */
@@ -118,7 +118,7 @@ public class FileUtil {
      */
     public static boolean isFileExist(String fileName, String type) {
         if (isExternalStorageWritable()) {
-            File dir = MainApplication.getContext().getExternalFilesDir(type);
+            File dir = IMApplication.getContext().getExternalFilesDir(type);
             if (dir != null) {
                 File f = new File(dir, fileName);
                 return f.exists();
@@ -137,7 +137,7 @@ public class FileUtil {
      */
     public static File createFile(byte[] data, String fileName, String type) {
         if (isExternalStorageWritable()) {
-            File dir = MainApplication.getContext().getExternalFilesDir(type);
+            File dir = IMApplication.getContext().getExternalFilesDir(type);
             if (dir != null) {
                 File f = new File(dir, fileName);
                 try {

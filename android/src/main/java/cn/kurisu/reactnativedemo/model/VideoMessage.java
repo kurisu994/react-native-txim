@@ -14,7 +14,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import cn.kurisu.reactnativedemo.MainApplication;
+import cn.kurisu.reactnativedemo.IMApplication;
 import cn.kurisu.reactnativedemo.R;
 import cn.kurisu.reactnativedemo.utils.FileUtil;
 import cn.kurisu.reactnativedemo.utils.MediaUtil;
@@ -83,7 +83,7 @@ public class VideoMessage extends Message {
     public String getSummary() {
         String str = getRevokeSummary();
         if (str != null) return str;
-        return MainApplication.getContext().getString(R.string.summary_video);
+        return IMApplication.getContext().getString(R.string.summary_video);
     }
 
     /**

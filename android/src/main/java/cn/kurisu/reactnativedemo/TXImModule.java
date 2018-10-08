@@ -308,12 +308,12 @@ public class TXImModule extends ReactContextBaseJavaModule {
         senderStr = message.getSender();
         contentStr = message.getSummary();
         Log.d(TAG, "recv msg " + contentStr);
-        NotificationManager mNotificationManager = (NotificationManager) MainApplication.getContext().getSystemService(NOTIFICATION_SERVICE);
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(MainApplication.getContext());
+        NotificationManager mNotificationManager = (NotificationManager) IMApplication.getContext().getSystemService(NOTIFICATION_SERVICE);
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(IMApplication.getContext());
         Intent notificationIntent = getReactApplicationContext().getApplicationContext().getPackageManager().getLaunchIntentForPackage(getReactApplicationContext().getApplicationContext().getPackageName());
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
                 | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        PendingIntent intent = PendingIntent.getActivity(MainApplication.getContext(), 0,
+        PendingIntent intent = PendingIntent.getActivity(IMApplication.getContext(), 0,
                 notificationIntent, 0);
         mBuilder.setContentTitle(senderStr)//设置通知栏标题
                 .setContentText(contentStr)
@@ -334,7 +334,7 @@ public class TXImModule extends ReactContextBaseJavaModule {
     }
 
     public void reset() {
-        NotificationManager notificationManager = (NotificationManager) MainApplication.getContext().getSystemService(NOTIFICATION_SERVICE);
+        NotificationManager notificationManager = (NotificationManager) IMApplication.getContext().getSystemService(NOTIFICATION_SERVICE);
         notificationManager.cancel(pushId);
     }
 

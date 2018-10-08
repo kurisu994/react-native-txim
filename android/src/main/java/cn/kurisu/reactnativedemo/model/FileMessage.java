@@ -8,7 +8,7 @@ import com.tencent.imsdk.TIMCallBack;
 import com.tencent.imsdk.TIMFileElem;
 import com.tencent.imsdk.TIMMessage;
 
-import cn.kurisu.reactnativedemo.MainApplication;
+import cn.kurisu.reactnativedemo.IMApplication;
 import cn.kurisu.reactnativedemo.R;
 import cn.kurisu.reactnativedemo.utils.FileUtil;
 
@@ -50,7 +50,7 @@ public class FileMessage extends Message {
         String[] str = e.getFileName().split("/");
         String filename = str[str.length - 1];
         if (FileUtil.isFileExist(filename, Environment.DIRECTORY_DOWNLOADS)) {
-            Toast.makeText(MainApplication.getContext(), MainApplication.getContext().getString(R.string.save_exist), Toast.LENGTH_SHORT).show();
+            Toast.makeText(IMApplication.getContext(), IMApplication.getContext().getString(R.string.save_exist), Toast.LENGTH_SHORT).show();
             return;
         }
 
