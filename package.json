@@ -1,0 +1,22 @@
+{
+  "name": "react-native-txim",
+  "version": "0.0.3",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kurisu994/reactNativeDemo.git"
+  },
+  "keywords": [
+    "txim"
+  ],
+  "author": "kurisu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kurisu994/reactNativeDemo/issues"
+  },
+  "homepage": "https://github.com/kurisu994/reactNativeDemo#readme.md"
+}
