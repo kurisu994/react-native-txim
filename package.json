@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kurisu994/reactNativeDemo.git"
+    "url": "git+https://github.com/kurisu994/react-native-txim.git"
   },
   "keywords": [
     "txim"
@@ -16,7 +16,7 @@
   "author": "kurisu",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/kurisu994/reactNativeDemo/issues"
+    "url": "https://github.com/kurisu994/react-native-txim/issues"
   },
-  "homepage": "https://github.com/kurisu994/reactNativeDemo#readme.md"
+  "homepage": "https://github.com/kurisu994/react-native-txim/blob/master/README.md"
 }
