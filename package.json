@@ -1,7 +1,7 @@
 {
   "name": "react-native-txim",
-  "version": "0.0.4",
-  "description": "",
+  "version": "0.0.5",
+  "description": "腾讯IM的RN集成 α版",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
