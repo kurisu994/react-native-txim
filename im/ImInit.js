@@ -24,8 +24,10 @@ const listenerBackgroundPushEvent = "observeBackgroundPushEvent";//''
 
 class ImInit{
 
-    init(appId, accountType, logLevel){
-        return TXIm.init(appId, accountType, logLevel)
+    init(logLevel){
+        const le = 0;
+        le = logLevel;
+        return TXIm.init(appId, accountType, le)
     }
 
     /**
