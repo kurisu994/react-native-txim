@@ -53,13 +53,21 @@ public class InitBusiness {
      */
     public void initImsdk(int sdkAppId, Context context, int logLevel) {
         TIMSdkConfig config = new TIMSdkConfig(sdkAppId).enableCrashReport(false)
+        TIMSdkConfig config = new TIMSdkConfig(sdkAppId).enableCrashReport(false)
                 .enableLogPrint(true)
                 .setLogLevel(TIMLogLevel.values()[logLevel]);
         //初始化imsdk
-        TIMManager.getInstance().setMode(1);
-        TIMManager.getInstance().init(context, config);
-        //禁止服务器自动代替上报已读
-        Log.i(TAG, "initIMsdk");
+        TIMManager instance = TIMManager.getInstance();
+//        instance.setMode(1);
+        boolean result = false;
+        int a= 0;
+        while (a < 10){
+            a++;
+            result = instance.init(context, config);
+            if (result){
+                break;
+            }
+        }
     }
     /**
      * 初始化用户配置

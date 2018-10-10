@@ -21,7 +21,6 @@ import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 //import com.huawei.android.pushagent.PushManager;
 import com.meizu.cloud.pushsdk.util.MzSystemUtils;
-import com.tencent.cos.utils.StringUtils;
 import com.tencent.imsdk.TIMCallBack;
 import com.tencent.imsdk.TIMConversation;
 import com.tencent.imsdk.TIMConversationType;
@@ -53,7 +52,6 @@ import cn.kurisu.reactnativedemo.utils.ReactCache;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 import static cn.kurisu.reactnativedemo.utils.ReactCache.observeRecentContact;
-import static com.tencent.open.utils.Global.getPackageName;
 
 
 public class TXImModule extends ReactContextBaseJavaModule {
@@ -92,19 +90,25 @@ public class TXImModule extends ReactContextBaseJavaModule {
      * @param logLevel    日志打印等级
      */
     @ReactMethod
-    public void init(int appId, int accountType, int logLevel) {
+    public void init(int logLevel) {
         clearNotification();
         Context context = getReactApplicationContext().getApplicationContext();
-        SharedPreferences pref = context.getSharedPreferences("data", Context.MODE_PRIVATE);
-        int loglvl = pref.getInt("loglvl", logLevel);
-        //初始化IMSDK
-        InitBusiness.getInstance().initImsdk(appId, context, loglvl);
-        TLSConfiguration.setSdkAppid(appId);
-        TLSConfiguration.setAccountType(accountType);
-        //初始化TLS
-        InitBusiness.initTlsSdk(context);
-        //初始化用户配置
-        InitBusiness.getInstance().initUserConfig();
+        try {
+            ApplicationInfo info = context.getPackageManager().getApplicationInfo(context.getPackageName(),
+                    PackageManager.GET_META_DATA);
+            int appid = info.metaData.getInt("IM_APPID");
+            int type = info.metaData.getInt("IM_ACCOUNT_TYPE");
+            //初始化IMSDK
+            InitBusiness.getInstance().initImsdk(appid, context, logLevel);
+            TLSConfiguration.setSdkAppid(appid);
+            TLSConfiguration.setAccountType(type);
+            //初始化TLS
+            InitBusiness.initTlsSdk(context);
+            //初始化用户配置
+            InitBusiness.getInstance().initUserConfig();
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -116,7 +120,7 @@ public class TXImModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void login(String identify, String userSig, Promise promise) {
-        if (StringUtils.getEmptyString(identify).equals("") || StringUtils.getEmptyString(userSig).equals("")) {
+        if (identify.equals("") || userSig.equals("")) {
             promise.reject("70002", "用户名或者签名不能为空");
             return;
         }
@@ -271,15 +275,15 @@ public class TXImModule extends ReactContextBaseJavaModule {
      * 判断小米推送是否已经初始化
      */
     private boolean shouldMiInit() {
-        ActivityManager am = ((ActivityManager) getReactApplicationContext().getSystemService(Context.ACTIVITY_SERVICE));
-        List<ActivityManager.RunningAppProcessInfo> processInfos = am.getRunningAppProcesses();
-        String mainProcessName = getPackageName();
-        int myPid = android.os.Process.myPid();
-        for (ActivityManager.RunningAppProcessInfo info : processInfos) {
-            if (info.pid == myPid && mainProcessName.equals(info.processName)) {
-                return true;
-            }
-        }
+//        ActivityManager am = ((ActivityManager) getReactApplicationContext().getSystemService(Context.ACTIVITY_SERVICE));
+//        List<ActivityManager.RunningAppProcessInfo> processInfos = am.getRunningAppProcesses();
+//        String mainProcessName = getPackageName();
+//        int myPid = android.os.Process.myPid();
+//        for (ActivityManager.RunningAppProcessInfo info : processInfos) {
+//            if (info.pid == myPid && mainProcessName.equals(info.processName)) {
+//                return true;
+//            }
+//        }
         return false;
     }
 
