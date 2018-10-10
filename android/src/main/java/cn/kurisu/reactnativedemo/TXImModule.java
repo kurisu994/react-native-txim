@@ -19,7 +19,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
-import com.huawei.android.pushagent.PushManager;
+//import com.huawei.android.pushagent.PushManager;
 import com.meizu.cloud.pushsdk.util.MzSystemUtils;
 import com.tencent.cos.utils.StringUtils;
 import com.tencent.imsdk.TIMCallBack;
@@ -136,16 +136,16 @@ public class TXImModule extends ReactContextBaseJavaModule {
                 //初始化消息监听
                 MessageEvent.getInstance();
                 String deviceMan = android.os.Build.MANUFACTURER;
-                //注册小米和华为推送
-                if (deviceMan.equals("Xiaomi") && shouldMiInit()) {
-                    MiPushClient.registerPush(getReactApplicationContext().getApplicationContext(), "2882303761517480335", "5411748055335");
-                } else if (deviceMan.equals("HUAWEI")) {
-                    PushManager.requestToken(getReactApplicationContext().getApplicationContext());
-                }
-                //魅族推送只适用于Flyme系统,因此可以先行判断是否为魅族机型，再进行订阅，避免在其他机型上出现兼容性问题
-                if (MzSystemUtils.isBrandMeizu(getReactApplicationContext().getApplicationContext())) {
-                    com.meizu.cloud.pushsdk.PushManager.register(getReactApplicationContext().getApplicationContext(), "112662", "3aaf89f8e13f43d2a4f97a703c6f65b3");
-                }
+//                //注册小米和华为推送
+//                if (deviceMan.equals("Xiaomi") && shouldMiInit()) {
+//                    MiPushClient.registerPush(getReactApplicationContext().getApplicationContext(), "2882303761517480335", "5411748055335");
+//                } else if (deviceMan.equals("HUAWEI")) {
+//                    PushManager.requestToken(getReactApplicationContext().getApplicationContext());
+//                }
+//                //魅族推送只适用于Flyme系统,因此可以先行判断是否为魅族机型，再进行订阅，避免在其他机型上出现兼容性问题
+//                if (MzSystemUtils.isBrandMeizu(getReactApplicationContext().getApplicationContext())) {
+//                    com.meizu.cloud.pushsdk.PushManager.register(getReactApplicationContext().getApplicationContext(), "112662", "3aaf89f8e13f43d2a4f97a703c6f65b3");
+//                }
                 promise.resolve("0");
             }
         });

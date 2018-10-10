@@ -23,16 +23,12 @@ public class MessageFactory {
                 return new ImageMessage(message);
             case Sound:
                 return new VoiceMessage(message);
-            case Video:
-                return new VideoMessage(message);
             case GroupTips:
                 return new GroupTipMessage(message);
             case File:
                 return new FileMessage(message);
             case Custom:
                 return new CustomMessage(message);
-            case UGC:
-                return new UGCMessage(message);
             default:
                 return null;
         }
