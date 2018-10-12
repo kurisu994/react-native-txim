@@ -1,0 +1,22 @@
+{
+  "name": "react-native-txim",
+  "version": "0.1.0",
+  "description": "腾讯IM的RN集成 α版",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kurisu994/react-native-txim.git"
+  },
+  "keywords": [
+    "txim"
+  ],
+  "author": "kurisu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kurisu994/react-native-txim/issues"
+  },
+  "homepage": "https://github.com/kurisu994/react-native-txim/blob/master/README.md"
+}
