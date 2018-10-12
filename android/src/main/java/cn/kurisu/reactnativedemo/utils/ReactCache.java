@@ -49,14 +49,16 @@ public class ReactCache {
         }
         Message message = MessageFactory.getMessage(timMsg);
         String timestamp = TimeUtil.getTimeStr(timMsg.timestamp());
-        TIMUserProfile senderProfile = timMsg.getSenderProfile();
-        String avatar = senderProfile.getFaceUrl();
-        String nickName = senderProfile.getNickName();
-        String account = senderProfile.getIdentifier();
-        map.putBoolean("isSelf",timMsg.isSelf());
-        map.putString("from_avatar", avatar);
-        map.putString("from_nickName", nickName);
-        map.putString("from_account", account);
+        map.putBoolean("isSelf", timMsg.isSelf());
+        if (!timMsg.isSelf()) {
+            TIMUserProfile senderProfile = timMsg.getSenderProfile();
+            String avatar = senderProfile.getFaceUrl();
+            String nickName = senderProfile.getNickName();
+            String account = senderProfile.getIdentifier();
+            map.putString("from_avatar", avatar);
+            map.putString("from_nickName", nickName);
+            map.putString("from_account", account);
+        }
         map.putString("send_time", timestamp);
         map.putString("msgId", timMsg.getMsgId());
         map.putString("msgType", message.getMsgType());
@@ -92,14 +94,16 @@ public class ReactCache {
                 }
                 Message message = MessageFactory.getMessage(timMsg);
                 String timestamp = TimeUtil.getTimeStr(timMsg.timestamp());
-                TIMUserProfile senderProfile = timMsg.getSenderProfile();
-                String avatar = senderProfile.getFaceUrl();
-                String nickName = senderProfile.getNickName();
-                String account = senderProfile.getIdentifier();
-                map.putBoolean("isSelf",timMsg.isSelf());
-                map.putString("from_avatar", avatar);
-                map.putString("from_nickName", nickName);
-                map.putString("from_account", account);
+                map.putBoolean("isSelf", timMsg.isSelf());
+                if (!timMsg.isSelf()) {
+                    TIMUserProfile senderProfile = timMsg.getSenderProfile();
+                    String avatar = senderProfile.getFaceUrl();
+                    String nickName = senderProfile.getNickName();
+                    String account = senderProfile.getIdentifier();
+                    map.putString("from_avatar", avatar);
+                    map.putString("from_nickName", nickName);
+                    map.putString("from_account", account);
+                }
                 map.putString("send_time", timestamp);
                 map.putString("msgId", timMsg.getMsgId());
                 map.putString("msgType", message.getMsgType());

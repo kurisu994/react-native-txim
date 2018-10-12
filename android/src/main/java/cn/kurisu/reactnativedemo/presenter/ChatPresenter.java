@@ -51,7 +51,7 @@ public class ChatPresenter implements Observer {
         //注册消息监听
         MessageEvent.getInstance().addObserver(this);
         RefreshEvent.getInstance().addObserver(this);
-        getMessage(null);
+        //getMessage(null);
         TIMConversationExt timConversationExt = new TIMConversationExt(conversation);
         if (timConversationExt.hasDraft()) {
             WritableMap writableMap = Arguments.createMap();
@@ -97,8 +97,6 @@ public class ChatPresenter implements Observer {
                 promise.resolve(0);
             }
         });
-        //message对象为发送中状态
-        MessageEvent.getInstance().onNewMessage(message);
     }
 
 
@@ -153,9 +151,9 @@ public class ChatPresenter implements Observer {
     @Override
     public void update(Observable observable, Object data) {
         if (observable instanceof MessageEvent) {
-            if (data instanceof TIMMessage || data == null) {
+            if (data instanceof TIMMessage) {
                 TIMMessage msg = (TIMMessage) data;
-                if (msg == null || msg.getConversation().getPeer().equals(conversation.getPeer()) && msg.getConversation().getType() == conversation.getType()) {
+                if (msg.getConversation().getPeer().equals(conversation.getPeer()) && msg.getConversation().getType() == conversation.getType()) {
                     //当前聊天界面已读上报，用于多终端登录时未读消息数同步
                     WritableMap writableMap = ReactCache.createMessage(msg);
                     if (writableMap != null) {
@@ -167,7 +165,7 @@ public class ChatPresenter implements Observer {
                 TIMMessageLocator msg = (TIMMessageLocator) data;
             }
         } else if (observable instanceof RefreshEvent) {
-            getMessage(null);
+            //getMessage(null);
         }
     }
 
