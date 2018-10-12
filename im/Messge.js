@@ -9,6 +9,7 @@ const listenerOnlineStatus = "observeOnlineStatus";//'在线状态'
 const listenerFriend = "observeFriend";//'联系人'
 const listenerTeam = "observeTeam";//'群组'
 const listenerReceiveMessage = "observeReceiveMessage";//'接收消息'
+const listenerCurrentMessage = "observeCurrentMessage";//接受当前目标消息
 
 const listenerDeleteMessage = "observeDeleteMessage";//'撤销后删除消息'
 const listenerReceiveSystemMsg = "observeReceiveSystemMsg";//'系统通知'
@@ -24,13 +25,28 @@ const listenerBackgroundPushEvent = "observeBackgroundPushEvent";//''
 
 
 class Message{
-    onNewMessage (cb) {
-        listeners[cb] = DeviceEventEmitter.addListener(
-            listenerReceiveMessage,
-            data => {
-                cb(data)
-            }
-        )
+    /**
+     * 新建会话
+     * @param type
+     * @param peer
+     * @returns {*}
+     */
+    joinChat(type, peer){
+        return TXIm.getConversation(type,peer);
+    }
+
+    /**
+     * 退出会话
+     */
+    exitChat(){
+        return TXIm.destroyConversation();
+    }
+
+    /**
+     * 发送文本消息
+     */
+    sendTextMsg(text){
+        return TXIm.sendTextMsg(text);
     }
 }
 export default new Message()

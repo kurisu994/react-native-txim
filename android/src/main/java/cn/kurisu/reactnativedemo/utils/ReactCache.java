@@ -22,6 +22,7 @@ public class ReactCache {
     public final static String observeFriend = "observeFriend";//'联系人'
     public final static String observeTeam = "observeTeam";//'群组'
     public final static String observeReceiveMessage = "observeReceiveMessage";//'接收消息'
+    public final static String observeCurrentMessage = "observeCurrentMessage";//'接收当前聊天人的消息'
 
     public final static String observeDeleteMessage = "observeDeleteMessage";//'撤销后删除消息'
     public final static String observeReceiveSystemMsg = "observeReceiveSystemMsg";//'系统通知'
@@ -35,8 +36,43 @@ public class ReactCache {
     public final static String observeLaunchPushEvent = "observeLaunchPushEvent";//''
     public final static String observeBackgroundPushEvent = "observeBackgroundPushEvent";//''
 
-    public static WritableMap createMessage(TIMMessage timMessage) {
+    public static WritableMap createMessage(TIMMessage timMsg) {
         WritableMap map = Arguments.createMap();
+        TIMMessageExt ext = new TIMMessageExt(timMsg);
+        TIMMessageStatus status = timMsg.status();
+        if (status.equals(TIMMessageStatus.HasDeleted)) {
+            return null;
+        }
+        boolean read = ext.isRead();
+        if (status.equals(TIMMessageStatus.HasRevoked)) {
+            read = true;
+        }
+        Message message = MessageFactory.getMessage(timMsg);
+        String timestamp = TimeUtil.getTimeStr(timMsg.timestamp());
+        TIMUserProfile senderProfile = timMsg.getSenderProfile();
+        String avatar = senderProfile.getFaceUrl();
+        String nickName = senderProfile.getNickName();
+        String account = senderProfile.getIdentifier();
+        map.putBoolean("isSelf",timMsg.isSelf());
+        map.putString("from_avatar", avatar);
+        map.putString("from_nickName", nickName);
+        map.putString("from_account", account);
+        map.putString("send_time", timestamp);
+        map.putString("msgId", timMsg.getMsgId());
+        map.putString("msgType", message.getMsgType());
+        if (message instanceof TextMessage) {
+            TIMTextElem element = (TIMTextElem) timMsg.getElement(0);
+            String text = element.getText();
+            map.putString("text", text);
+            map.putString("summary", message.getSummary());
+        } else if (message instanceof CustomMessage) {
+            TIMCustomElem element = (TIMCustomElem) timMsg.getElement(0);
+            map.putString("data", new String(element.getData()));
+            map.putString("ext", new String(element.getExt()));
+            map.putString("text", message.getDesc());
+            map.putString("summary", message.getSummary());
+        }
+        map.putBoolean("isRead", read);
         return map;
     }
 

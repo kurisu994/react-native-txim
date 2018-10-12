@@ -1,16 +1,11 @@
 package cn.kurisu.reactnativedemo;
 
-import android.app.ActivityManager;
-import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.facebook.react.bridge.Promise;
@@ -19,13 +14,10 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
-//import com.huawei.android.pushagent.PushManager;
-import com.meizu.cloud.pushsdk.util.MzSystemUtils;
 import com.tencent.imsdk.TIMCallBack;
 import com.tencent.imsdk.TIMConversation;
 import com.tencent.imsdk.TIMConversationType;
 import com.tencent.imsdk.TIMFriendshipManager;
-import com.tencent.imsdk.TIMGroupReceiveMessageOpt;
 import com.tencent.imsdk.TIMLogLevel;
 import com.tencent.imsdk.TIMManager;
 import com.tencent.imsdk.TIMMessage;
@@ -45,9 +37,9 @@ import cn.kurisu.reactnativedemo.business.InitBusiness;
 import cn.kurisu.reactnativedemo.business.LoginBusiness;
 import cn.kurisu.reactnativedemo.business.TLSConfiguration;
 import cn.kurisu.reactnativedemo.event.MessageEvent;
-import cn.kurisu.reactnativedemo.model.Message;
-import cn.kurisu.reactnativedemo.model.MessageFactory;
-import cn.kurisu.reactnativedemo.utils.Foreground;
+import cn.kurisu.reactnativedemo.presenter.ChatPresenter;
+import cn.kurisu.reactnativedemo.presenter.ConversationPresenter;
+import cn.kurisu.reactnativedemo.utils.PushUtil;
 import cn.kurisu.reactnativedemo.utils.ReactCache;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
@@ -60,6 +52,8 @@ public class TXImModule extends ReactContextBaseJavaModule {
     private TIMConversation conversation;
     private static int pushNum = 0;
     private final int pushId = 1;
+    public static ChatPresenter presenter;
+    public ConversationPresenter conversationPresenter = new ConversationPresenter();
 
     public TXImModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -85,12 +79,10 @@ public class TXImModule extends ReactContextBaseJavaModule {
     /**
      * 初始化SDK
      *
-     * @param appId       appid
-     * @param accountType accountType
-     * @param logLevel    日志打印等级
+     * @param logLevel 日志打印等级
      */
     @ReactMethod
-    public void init(int logLevel) {
+    public void init(int logLevel, Promise promise) {
         clearNotification();
         Context context = getReactApplicationContext().getApplicationContext();
         try {
@@ -98,16 +90,15 @@ public class TXImModule extends ReactContextBaseJavaModule {
                     PackageManager.GET_META_DATA);
             int appid = info.metaData.getInt("IM_APPID");
             int type = info.metaData.getInt("IM_ACCOUNT_TYPE");
-            //初始化IMSDK
-            InitBusiness.getInstance().initImsdk(appid, context, logLevel);
-            TLSConfiguration.setSdkAppid(appid);
-            TLSConfiguration.setAccountType(type);
-            //初始化TLS
-            InitBusiness.initTlsSdk(context);
             //初始化用户配置
-            InitBusiness.getInstance().initUserConfig();
+            InitBusiness instance = InitBusiness.getInstance();
+            instance.initUserConfig();
+            //初始化IMSDK
+            boolean b = instance.initImsdk(appid, context, logLevel);
+            promise.resolve(b);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
+            promise.reject("-1", "初始化sdk失败");
         }
     }
 
@@ -120,6 +111,7 @@ public class TXImModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void login(String identify, String userSig, Promise promise) {
+        Context context = getReactApplicationContext().getApplicationContext();
         if (identify.equals("") || userSig.equals("")) {
             promise.reject("70002", "用户名或者签名不能为空");
             return;
@@ -132,14 +124,27 @@ public class TXImModule extends ReactContextBaseJavaModule {
         LoginBusiness.loginIm(identify, userSig, new TIMCallBack() {
             @Override
             public void onError(int i, String s) {
+                switch (i) {
+                    case 6208:
+                        //离线状态下被其他终端踢下线
+                        show("离线状态下被其他终端踢下线");
+                        break;
+                    case 6200:
+                        Toast.makeText(context, context.getString(R.string.login_error_timeout), Toast.LENGTH_SHORT).show();
+                        break;
+                    default:
+                        Toast.makeText(context, context.getString(R.string.login_error), Toast.LENGTH_SHORT).show();
+                        break;
+                }
                 promise.reject(String.valueOf(i), s);
             }
 
             @Override
             public void onSuccess() {
-                //初始化消息监听
-                MessageEvent.getInstance();
                 String deviceMan = android.os.Build.MANUFACTURER;
+                //初始化程序后台后消息推送
+                PushUtil.getInstance();
+                MessageEvent.getInstance();
 //                //注册小米和华为推送
 //                if (deviceMan.equals("Xiaomi") && shouldMiInit()) {
 //                    MiPushClient.registerPush(getReactApplicationContext().getApplicationContext(), "2882303761517480335", "5411748055335");
@@ -215,11 +220,25 @@ public class TXImModule extends ReactContextBaseJavaModule {
     }
 
 
+    /**
+     * 新建会话
+     *
+     * @param type
+     * @param peer
+     */
     @ReactMethod
     public void getConversation(int type, String peer) {
-        this.conversation = TIMManager.getInstance().getConversation(
-                TIMConversationType.values()[type],    //会话类型：1单聊 2群聊
-                peer);
+        presenter = new ChatPresenter(peer, TIMConversationType.values()[type]);
+        presenter.start();
+    }
+
+    /**
+     * 注销会话
+     */
+    @ReactMethod
+    public void destroyConversation() {
+        presenter.stop();
+        presenter = null;
     }
 
     @ReactMethod
@@ -234,20 +253,7 @@ public class TXImModule extends ReactContextBaseJavaModule {
             promise.reject("-1", "消息发送失败，请重试");
             return;
         }
-        //发送消息
-        conversation.sendMessage(msg, new TIMValueCallBack<TIMMessage>() {//发送消息回调
-            @Override
-            public void onError(int code, String desc) {//发送消息失败
-                //错误码 code 和错误描述 desc，可用于定位请求失败原因
-                //错误码 code 含义请参见错误码表
-                promise.reject(String.valueOf(code), desc);
-            }
-
-            @Override
-            public void onSuccess(TIMMessage msg) {//发送消息成功
-                promise.resolve(0);
-            }
-        });
+        presenter.sendMessage(msg, promise);
     }
 
     @ReactMethod
@@ -287,51 +293,6 @@ public class TXImModule extends ReactContextBaseJavaModule {
         return false;
     }
 
-    /**
-     * 清楚所有通知栏通知
-     */
-    private void clearNotification() {
-        Context context = getReactApplicationContext().getApplicationContext();
-        NotificationManager notificationManager = (NotificationManager) context
-                .getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.cancelAll();
-        MiPushClient.clearNotification(context);
-    }
-
-    private void PushNotify(TIMMessage msg) {
-        //系统消息，自己发的消息，程序在前台的时候不通知
-        if (msg == null || Foreground.get().isForeground() ||
-                (msg.getConversation().getType() != TIMConversationType.Group &&
-                        msg.getConversation().getType() != TIMConversationType.C2C) ||
-                msg.isSelf() ||
-                msg.getRecvFlag() == TIMGroupReceiveMessageOpt.ReceiveNotNotify) return;
-
-        String senderStr, contentStr;
-        Message message = MessageFactory.getMessage(msg);
-        if (message == null) return;
-        senderStr = message.getSender();
-        contentStr = message.getSummary();
-        Log.d(TAG, "recv msg " + contentStr);
-        NotificationManager mNotificationManager = (NotificationManager) IMApplication.getContext().getSystemService(NOTIFICATION_SERVICE);
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(IMApplication.getContext());
-        Intent notificationIntent = getReactApplicationContext().getApplicationContext().getPackageManager().getLaunchIntentForPackage(getReactApplicationContext().getApplicationContext().getPackageName());
-        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-                | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        PendingIntent intent = PendingIntent.getActivity(IMApplication.getContext(), 0,
-                notificationIntent, 0);
-        mBuilder.setContentTitle(senderStr)//设置通知栏标题
-                .setContentText(contentStr)
-                .setContentIntent(intent) //设置通知栏点击意图
-                .setNumber(++pushNum) //设置通知集合的数量
-                .setTicker(senderStr + ":" + contentStr) //通知首次出现在通知栏，带上升动画效果的
-                .setWhen(System.currentTimeMillis())//通知产生的时间，会在通知信息里显示，一般是系统获取到的时间
-                .setDefaults(Notification.DEFAULT_ALL)//向通知添加声音、闪灯和振动效果的最简单、最一致的方式是使用当前的用户默认设置，使用defaults属性，可以组合
-                .setSmallIcon(R.mipmap.ic_launcher);//设置通知小ICON
-        Notification notify = mBuilder.build();
-        notify.flags |= Notification.FLAG_AUTO_CANCEL;
-        mNotificationManager.notify(pushId, notify);
-        //TODO
-    }
 
     public static void resetPushNum() {
         pushNum = 0;
@@ -342,4 +303,13 @@ public class TXImModule extends ReactContextBaseJavaModule {
         notificationManager.cancel(pushId);
     }
 
+    /**
+     * 清楚所有通知栏通知
+     */
+    private static void clearNotification() {
+        NotificationManager notificationManager = (NotificationManager) IMApplication.getContext()
+                .getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.cancelAll();
+        MiPushClient.clearNotification(IMApplication.getContext());
+    }
 }

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.Log;
 
 import com.facebook.react.bridge.Arguments;
-import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.WritableMap;
 import com.tencent.imsdk.TIMConnListener;
 import com.tencent.imsdk.TIMLogLevel;
@@ -12,9 +11,7 @@ import com.tencent.imsdk.TIMManager;
 import com.tencent.imsdk.TIMSdkConfig;
 import com.tencent.imsdk.TIMUserConfig;
 import com.tencent.imsdk.TIMUserStatusListener;
-import com.tencent.imsdk.ext.message.TIMUserConfigMsgExt;
 
-import cn.kurisu.reactnativedemo.TXImModule;
 import cn.kurisu.reactnativedemo.TXImPackage;
 import cn.kurisu.reactnativedemo.event.FriendshipEvent;
 import cn.kurisu.reactnativedemo.event.GroupEvent;
@@ -23,7 +20,6 @@ import cn.kurisu.reactnativedemo.event.RefreshEvent;
 import tencent.tls.platform.TLSAccountHelper;
 import tencent.tls.platform.TLSLoginHelper;
 
-import static cn.kurisu.reactnativedemo.utils.ReactCache.observeAccountNotice;
 import static cn.kurisu.reactnativedemo.utils.ReactCache.observeOnKick;
 import static cn.kurisu.reactnativedemo.utils.ReactCache.observeOnlineStatus;
 
@@ -41,7 +37,7 @@ public class InitBusiness {
     private InitBusiness() {
     }
 
-    public static InitBusiness getInstance(){
+    public static InitBusiness getInstance() {
         if (initBusiness == null) {
             initBusiness = new InitBusiness();
         }
@@ -51,24 +47,24 @@ public class InitBusiness {
     /**
      * 初始化imsdk
      */
-    public void initImsdk(int sdkAppId, Context context, int logLevel) {
-        TIMSdkConfig config = new TIMSdkConfig(sdkAppId).enableCrashReport(false)
+    public boolean initImsdk(int sdkAppId, Context context, int logLevel) {
         TIMSdkConfig config = new TIMSdkConfig(sdkAppId).enableCrashReport(false)
                 .enableLogPrint(true)
                 .setLogLevel(TIMLogLevel.values()[logLevel]);
         //初始化imsdk
-        TIMManager instance = TIMManager.getInstance();
-//        instance.setMode(1);
         boolean result = false;
         int a= 0;
         while (a < 10){
             a++;
-            result = instance.init(context, config);
+            TIMManager.getInstance().setMode(1);
+            result = TIMManager.getInstance().init(context, config);
             if (result){
                 break;
             }
         }
+        return result;
     }
+
     /**
      * 初始化用户配置
      */
@@ -80,7 +76,7 @@ public class InitBusiness {
             public void onForceOffline() {
                 Log.d(TAG, "被其他终端踢下线了");
                 WritableMap map = Arguments.createMap();
-                map.putInt("code",6023 );
+                map.putInt("code", 6023);
                 TXImPackage.txImModule.sendEvent(observeOnKick, map);
             }
 
@@ -95,6 +91,7 @@ public class InitBusiness {
             @Override
             public void onConnected() {
                 Log.i(TAG, "onConnected");
+                TXImPackage.txImModule.show("连接成功");
                 WritableMap map = Arguments.createMap();
                 map.putInt("code", 10000);
                 TXImPackage.txImModule.sendEvent(observeOnlineStatus, map);
@@ -104,7 +101,7 @@ public class InitBusiness {
             public void onDisconnected(int code, String desc) {
                 Log.i(TAG, "onDisconnected");
                 WritableMap map = Arguments.createMap();
-                map.putInt("code",10001 );
+                map.putInt("code", 10001);
                 TXImPackage.txImModule.sendEvent(observeOnlineStatus, map);
             }
 
@@ -124,6 +121,7 @@ public class InitBusiness {
         userConfig = MessageEvent.getInstance().init(userConfig);
         TIMManager.getInstance().setUserConfig(userConfig);
     }
+
     /**
      * @param context: 关联的activity
      * @function: 初始化TLS SDK, 必须在使用TLS SDK相关服务之前调用

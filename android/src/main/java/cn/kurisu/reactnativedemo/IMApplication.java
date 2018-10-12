@@ -8,7 +8,7 @@ import com.tencent.imsdk.TIMManager;
 
 public class IMApplication {
 
-    private static  Context context;
+    private static Context context;
 
     private static Class mainActivityClass;
 

@@ -47,25 +47,7 @@
         android:required="true" />
 
 
-    <application
-        android:name=".MainApplication"
-        android:label="@string/app_name"
-        android:icon="@mipmap/ic_launcher"
-        android:allowBackup="false"
-        android:theme="@style/AppTheme">
-
-        <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-            android:windowSoftInputMode="adjustResize">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-        <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
+    <application>
 
         <!-- 消息收发service -->
         <service
@@ -186,7 +168,7 @@
 
 
         <!-- PushSDK:PushSDK接收外部请求事件入口 -->
-        <receiver
+        <!--<receiver
             android:name="com.huawei.android.pushagent.PushEventReceiver"
             android:process=":HwPushService">
             <intent-filter>
@@ -201,7 +183,7 @@
             android:process=":HwPushService">
             <intent-filter>
                 <action android:name="com.huawei.android.push.intent.REGISTER" />
-                <!-- <action android:name="android.net.conn.CONNECTIVITY_CHANGE" /> -->
+                &lt;!&ndash; <action android:name="android.net.conn.CONNECTIVITY_CHANGE" /> &ndash;&gt;
             </intent-filter>
 
             <meta-data
@@ -209,10 +191,10 @@
                 android:value="\u0032\u0037\u0030\u0035" />
         </receiver>
 
-        <!-- PushSDK:Push服务 -->
+        &lt;!&ndash; PushSDK:Push服务 &ndash;&gt;
         <service
             android:name="com.huawei.android.pushagent.PushService"
-            android:process=":HwPushService"/>
+            android:process=":HwPushService"/>-->
         <!-- hwpush -->
 
         <!-- firebase -->
