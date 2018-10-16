@@ -1,5 +1,6 @@
 package cn.kurisu.reactnativedemo;
 
+import android.app.ActivityManager;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
@@ -14,6 +15,8 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.huawei.android.pushagent.PushManager;
+import com.meizu.cloud.pushsdk.util.MzSystemUtils;
 import com.tencent.imsdk.TIMCallBack;
 import com.tencent.imsdk.TIMConversation;
 import com.tencent.imsdk.TIMConversationType;
@@ -295,15 +298,15 @@ public class TXImModule extends ReactContextBaseJavaModule {
      * 判断小米推送是否已经初始化
      */
     private boolean shouldMiInit() {
-//        ActivityManager am = ((ActivityManager) getReactApplicationContext().getSystemService(Context.ACTIVITY_SERVICE));
-//        List<ActivityManager.RunningAppProcessInfo> processInfos = am.getRunningAppProcesses();
-//        String mainProcessName = getPackageName();
-//        int myPid = android.os.Process.myPid();
-//        for (ActivityManager.RunningAppProcessInfo info : processInfos) {
-//            if (info.pid == myPid && mainProcessName.equals(info.processName)) {
-//                return true;
-//            }
-//        }
+        ActivityManager am = ((ActivityManager) getReactApplicationContext().getSystemService(Context.ACTIVITY_SERVICE));
+        List<ActivityManager.RunningAppProcessInfo> processInfos = am.getRunningAppProcesses();
+        String mainProcessName = getReactApplicationContext().getPackageName();
+        int myPid = android.os.Process.myPid();
+        for (ActivityManager.RunningAppProcessInfo info : processInfos) {
+            if (info.pid == myPid && mainProcessName.equals(info.processName)) {
+                return true;
+            }
+        }
         return false;
     }
 
