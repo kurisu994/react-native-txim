@@ -50,6 +50,7 @@ public class TXImModule extends ReactContextBaseJavaModule {
     private static final String TAG = TXImModule.class.getSimpleName();
     private static final String NAME = "TXIm";
     private TIMConversation conversation;
+    private static boolean isInit = false;
     private static int pushNum = 0;
     private final int pushId = 1;
     public static ChatPresenter presenter;
@@ -84,6 +85,10 @@ public class TXImModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void init(int logLevel, Promise promise) {
         clearNotification();
+        if (isInit) {
+            promise.resolve(true);
+            return;
+        }
         Context context = getReactApplicationContext().getApplicationContext();
         try {
             ApplicationInfo info = context.getPackageManager().getApplicationInfo(context.getPackageName(),
@@ -95,7 +100,12 @@ public class TXImModule extends ReactContextBaseJavaModule {
             instance.initUserConfig();
             //初始化IMSDK
             boolean b = instance.initImsdk(appid, context, logLevel);
-            promise.resolve(b);
+            if (b) {
+                isInit = true;
+                promise.resolve(true);
+            } else {
+                promise.reject(-1,"初始化失败")
+            }
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
             promise.reject("-1", "初始化sdk失败");
