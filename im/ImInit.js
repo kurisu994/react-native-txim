@@ -18,12 +18,7 @@ export function init(logLevel) {
  */
 
 export function login(identify, userSig) {
-  return TXIm.login(identify, userSig).then(res => {
-    if (res) {
-      isInit = true;
-    }
-    return true;
-  });
+  return TXIm.login(identify, userSig)
 }
 
 /**
@@ -39,5 +34,5 @@ export function getInitStatus() {
 }
 
 export default {
-  init, login, logout, getInitStatus
+  init, login, logout
 }
