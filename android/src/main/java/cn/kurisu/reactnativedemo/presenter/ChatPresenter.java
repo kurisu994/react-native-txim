@@ -91,10 +91,9 @@ public class ChatPresenter implements Observer {
                 //错误码 code 含义请参见错误码表
                 promise.reject(String.valueOf(code), desc);
             }
-
             @Override
             public void onSuccess(TIMMessage msg) {//发送消息成功
-                promise.resolve(0);
+                promise.resolve(true);
             }
         });
     }
@@ -110,18 +109,16 @@ public class ChatPresenter implements Observer {
             @Override
             public void onError(int i, String s) {
             }
-
             @Override
             public void onSuccess(TIMMessage message) {
-
             }
         });
     }
 
     /**
-     * 发送在线消息
+     * 撤消消息
      *
-     * @param message 发送的消息
+     * @param message
      */
     public void revokeMessage(final TIMMessage message) {
         TIMConversationExt timConversationExt = new TIMConversationExt(conversation);

@@ -35,7 +35,6 @@ import java.util.Map;
 
 import cn.kurisu.reactnativedemo.business.InitBusiness;
 import cn.kurisu.reactnativedemo.business.LoginBusiness;
-import cn.kurisu.reactnativedemo.business.TLSConfiguration;
 import cn.kurisu.reactnativedemo.event.MessageEvent;
 import cn.kurisu.reactnativedemo.presenter.ChatPresenter;
 import cn.kurisu.reactnativedemo.presenter.ConversationPresenter;
@@ -104,11 +103,11 @@ public class TXImModule extends ReactContextBaseJavaModule {
                 isInit = true;
                 promise.resolve(true);
             } else {
-                promise.reject(-1,"初始化失败")
+                promise.reject(-1, "初始化失败")
             }
-        } catch (PackageManager.NameNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            promise.reject("-1", "初始化sdk失败");
+            promise.reject("-1", e.getMessage);
         }
     }
 
@@ -128,7 +127,7 @@ public class TXImModule extends ReactContextBaseJavaModule {
         }
         String loginUser = TIMManager.getInstance().getLoginUser();
         if (identify.equals(loginUser)) {
-            promise.resolve("0");
+            promise.resolve(true);
             return;
         }
         LoginBusiness.loginIm(identify, userSig, new TIMCallBack() {
@@ -165,7 +164,7 @@ public class TXImModule extends ReactContextBaseJavaModule {
 //                if (MzSystemUtils.isBrandMeizu(getReactApplicationContext().getApplicationContext())) {
 //                    com.meizu.cloud.pushsdk.PushManager.register(getReactApplicationContext().getApplicationContext(), "112662", "3aaf89f8e13f43d2a4f97a703c6f65b3");
 //                }
-                promise.resolve("0");
+                promise.resolve(true);
             }
         });
     }
@@ -180,7 +179,7 @@ public class TXImModule extends ReactContextBaseJavaModule {
 
             @Override
             public void onSuccess() {
-                promise.resolve("0");
+                promise.resolve(true);
             }
         });
     }
@@ -237,9 +236,14 @@ public class TXImModule extends ReactContextBaseJavaModule {
      * @param peer
      */
     @ReactMethod
-    public void getConversation(int type, String peer) {
-        presenter = new ChatPresenter(peer, TIMConversationType.values()[type]);
-        presenter.start();
+    public void getConversation(int type, String peer, Promise promise) {
+        try {
+            presenter = new ChatPresenter(peer, TIMConversationType.values()[type]);
+            presenter.start();
+            promise.resolve(true);
+        } catch (Exception e) {
+            promise.reject("-1", "新建会话失败");
+        }
     }
 
     /**

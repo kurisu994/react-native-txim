@@ -5,24 +5,12 @@ const { TXIm } = NativeModules;
 
 
 export const event = {
-  recentContact: "observeRecentContact",
   onlineStatus: "observeOnlineStatus",
-  friend: "observeFriend",
-  team: "observeTeam",
   receiveMessage: "observeReceiveMessage",
   currentMessage: "observeCurrentMessage",
-  deleteMessage: "observeDeleteMessage",
   receiveSystemMsg: "observeReceiveSystemMsg",
-  msgStatus: "observeMsgStatus",
-  audioRecord: "observeAudioRecord",
-  unreadCountChange: "observeUnreadCountChange",
   blackList: "observeBlackList",
-  attachmentProgress: "observeAttachmentProgress",
-  onKick: "observeOnKick",
-  accountNotice: "observeAccountNotice",
-  launchPushEvent: "observeLaunchPushEvent",
-  backgroundPushEvent: "observeBackgroundPushEvent"
-
+  userStatus: "observeUserStatus",
 }
 
 
