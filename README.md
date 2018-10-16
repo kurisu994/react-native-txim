@@ -19,8 +19,13 @@ android{
         pickFirst 'lib/armeabi-v7a/libgnustl_shared.so'
         pickFirst 'lib/x86/libgnustl_shared.so'
     }
+    
+    compileOptions {
+            targetCompatibility 1.8
+            sourceCompatibility 1.8
+        }
 }
-3.//file:android/build.gradle
+4.//file:android/build.gradle
 
 allprojects {
     repositories {
@@ -36,6 +41,7 @@ allprojects {
         maven {url 'http://developer.huawei.com/repo/'} //添加这一行
     }
 }
+
 ```
 ## 如何安装
 
