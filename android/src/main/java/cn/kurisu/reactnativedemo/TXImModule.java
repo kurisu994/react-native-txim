@@ -1,5 +1,6 @@
 package cn.kurisu.reactnativedemo;
 
+import android.app.ActivityManager;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
@@ -14,6 +15,8 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.huawei.android.pushagent.PushManager;
+import com.meizu.cloud.pushsdk.util.MzSystemUtils;
 import com.tencent.imsdk.TIMCallBack;
 import com.tencent.imsdk.TIMConversation;
 import com.tencent.imsdk.TIMConversationType;
@@ -35,7 +38,6 @@ import java.util.Map;
 
 import cn.kurisu.reactnativedemo.business.InitBusiness;
 import cn.kurisu.reactnativedemo.business.LoginBusiness;
-import cn.kurisu.reactnativedemo.business.TLSConfiguration;
 import cn.kurisu.reactnativedemo.event.MessageEvent;
 import cn.kurisu.reactnativedemo.presenter.ChatPresenter;
 import cn.kurisu.reactnativedemo.presenter.ConversationPresenter;
@@ -50,6 +52,7 @@ public class TXImModule extends ReactContextBaseJavaModule {
     private static final String TAG = TXImModule.class.getSimpleName();
     private static final String NAME = "TXIm";
     private TIMConversation conversation;
+    private static boolean isInit = false;
     private static int pushNum = 0;
     private final int pushId = 1;
     public static ChatPresenter presenter;
@@ -84,6 +87,10 @@ public class TXImModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void init(int logLevel, Promise promise) {
         clearNotification();
+        if (isInit) {
+            promise.resolve(true);
+            return;
+        }
         Context context = getReactApplicationContext().getApplicationContext();
         try {
             ApplicationInfo info = context.getPackageManager().getApplicationInfo(context.getPackageName(),
@@ -95,10 +102,15 @@ public class TXImModule extends ReactContextBaseJavaModule {
             instance.initUserConfig();
             //初始化IMSDK
             boolean b = instance.initImsdk(appid, context, logLevel);
-            promise.resolve(b);
-        } catch (PackageManager.NameNotFoundException e) {
+            if (b) {
+                isInit = true;
+                promise.resolve(true);
+            } else {
+                promise.reject("-1", "初始化失败");
+            }
+        } catch (Exception e) {
             e.printStackTrace();
-            promise.reject("-1", "初始化sdk失败");
+            promise.reject("-1", e.getMessage());
         }
     }
 
@@ -118,7 +130,7 @@ public class TXImModule extends ReactContextBaseJavaModule {
         }
         String loginUser = TIMManager.getInstance().getLoginUser();
         if (identify.equals(loginUser)) {
-            promise.resolve("0");
+            promise.resolve(true);
             return;
         }
         LoginBusiness.loginIm(identify, userSig, new TIMCallBack() {
@@ -145,17 +157,17 @@ public class TXImModule extends ReactContextBaseJavaModule {
                 //初始化程序后台后消息推送
                 PushUtil.getInstance();
                 MessageEvent.getInstance();
-//                //注册小米和华为推送
-//                if (deviceMan.equals("Xiaomi") && shouldMiInit()) {
-//                    MiPushClient.registerPush(getReactApplicationContext().getApplicationContext(), "2882303761517480335", "5411748055335");
-//                } else if (deviceMan.equals("HUAWEI")) {
-//                    PushManager.requestToken(getReactApplicationContext().getApplicationContext());
-//                }
-//                //魅族推送只适用于Flyme系统,因此可以先行判断是否为魅族机型，再进行订阅，避免在其他机型上出现兼容性问题
-//                if (MzSystemUtils.isBrandMeizu(getReactApplicationContext().getApplicationContext())) {
-//                    com.meizu.cloud.pushsdk.PushManager.register(getReactApplicationContext().getApplicationContext(), "112662", "3aaf89f8e13f43d2a4f97a703c6f65b3");
-//                }
-                promise.resolve("0");
+                //注册小米和华为推送
+                if (deviceMan.equals("Xiaomi") && shouldMiInit()) {
+                    MiPushClient.registerPush(getReactApplicationContext().getApplicationContext(), "2882303761517480335", "5411748055335");
+                } else if (deviceMan.equals("HUAWEI")) {
+                    PushManager.requestToken(getReactApplicationContext().getApplicationContext());
+                }
+                //魅族推送只适用于Flyme系统,因此可以先行判断是否为魅族机型，再进行订阅，避免在其他机型上出现兼容性问题
+                if (MzSystemUtils.isBrandMeizu(getReactApplicationContext().getApplicationContext())) {
+                    com.meizu.cloud.pushsdk.PushManager.register(getReactApplicationContext().getApplicationContext(), "112662", "3aaf89f8e13f43d2a4f97a703c6f65b3");
+                }
+                promise.resolve(true);
             }
         });
     }
@@ -170,7 +182,7 @@ public class TXImModule extends ReactContextBaseJavaModule {
 
             @Override
             public void onSuccess() {
-                promise.resolve("0");
+                promise.resolve(true);
             }
         });
     }
@@ -227,9 +239,14 @@ public class TXImModule extends ReactContextBaseJavaModule {
      * @param peer
      */
     @ReactMethod
-    public void getConversation(int type, String peer) {
-        presenter = new ChatPresenter(peer, TIMConversationType.values()[type]);
-        presenter.start();
+    public void getConversation(int type, String peer, Promise promise) {
+        try {
+            presenter = new ChatPresenter(peer, TIMConversationType.values()[type]);
+            presenter.start();
+            promise.resolve(true);
+        } catch (Exception e) {
+            promise.reject("-1", "新建会话失败");
+        }
     }
 
     /**
@@ -281,15 +298,15 @@ public class TXImModule extends ReactContextBaseJavaModule {
      * 判断小米推送是否已经初始化
      */
     private boolean shouldMiInit() {
-//        ActivityManager am = ((ActivityManager) getReactApplicationContext().getSystemService(Context.ACTIVITY_SERVICE));
-//        List<ActivityManager.RunningAppProcessInfo> processInfos = am.getRunningAppProcesses();
-//        String mainProcessName = getPackageName();
-//        int myPid = android.os.Process.myPid();
-//        for (ActivityManager.RunningAppProcessInfo info : processInfos) {
-//            if (info.pid == myPid && mainProcessName.equals(info.processName)) {
-//                return true;
-//            }
-//        }
+        ActivityManager am = ((ActivityManager) getReactApplicationContext().getSystemService(Context.ACTIVITY_SERVICE));
+        List<ActivityManager.RunningAppProcessInfo> processInfos = am.getRunningAppProcesses();
+        String mainProcessName = getReactApplicationContext().getPackageName();
+        int myPid = android.os.Process.myPid();
+        for (ActivityManager.RunningAppProcessInfo info : processInfos) {
+            if (info.pid == myPid && mainProcessName.equals(info.processName)) {
+                return true;
+            }
+        }
         return false;
     }
 

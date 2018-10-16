@@ -16,7 +16,9 @@ public class TXImPackage implements ReactPackage {
     @Override
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
         List<NativeModule> modules = new ArrayList<>();
-        txImModule = new TXImModule(reactContext);
+        if (txImModule == null) {
+            txImModule = new TXImModule(reactContext);
+        }
         modules.add(txImModule);
         return modules;
     }

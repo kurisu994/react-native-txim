@@ -1,32 +1,38 @@
-'use strict';
-import { NativeModules, Platform, DeviceEventEmitter } from 'react-native'
+import { NativeModules } from 'react-native';
 const { TXIm } = NativeModules;
 
-const listeners = {};
-
-class ImInit{
-
-    init(logLevel){
-        const le = 0;
-        le = logLevel;
-        return TXIm.init(le)
-    }
-
-    /**
-     * 登陆
-     * @param identify
-     * @param userSig
-     * @returns {*} @see observeOnlineStatus 用户登陆状态见他
-     */
-    login(identify, userSig) {
-        return TXIm.login(identify, userSig)
-    }
-    /**
-     * 退出
-     * @returns {*}
-     */
-    logout() {
-        return TXIm.logout()
-    }
+export function init(logLevel) {
+  let level = 0;
+  if (logLevel) {
+    level = logLevel;
+  }
+  return TXIm.init(level);
 }
-export default new ImInit()
+
+
+/**
+ * 登陆
+ * @param identify 用户账号
+ * @param userSig 用户签名
+ * @returns {*} @see observeOnlineStatus 用户登陆状态监听
+ */
+
+export function login(identify, userSig) {
+  return TXIm.login(identify, userSig)
+}
+
+/**
+ * 退出
+ * @returns {*}
+ */
+export function logout() {
+  return TXIm.logout()
+}
+
+export function getInitStatus() {
+  return isInit;
+}
+
+export default {
+  init, login, logout
+}

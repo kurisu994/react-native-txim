@@ -1,4 +1,3 @@
-
 React Native的腾讯IM插件
 #### 注意事项: 
 ```
@@ -20,7 +19,29 @@ android{
         pickFirst 'lib/armeabi-v7a/libgnustl_shared.so'
         pickFirst 'lib/x86/libgnustl_shared.so'
     }
+    
+    compileOptions {
+            targetCompatibility 1.8
+            sourceCompatibility 1.8
+        }
 }
+4.//file:android/build.gradle
+
+allprojects {
+    repositories {
+        mavenLocal()
+        jcenter()
+        maven {
+            // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
+            url "$rootDir/../node_modules/react-native/android"
+        }
+        // jitpack repo is necessary to fetch ucrop dependency
+        maven { url "https://jitpack.io" }
+        maven { url "https://maven.google.com" }
+        maven {url 'http://developer.huawei.com/repo/'} //添加这一行
+    }
+}
+
 ```
 ## 如何安装
 
@@ -89,7 +110,7 @@ public class MainActivity extends ReactActivity {
 
  ```
 
-`android/app/src/main/java/<你的包名>/MainApplication.java`中添加如下两行：
+`android/app/src/main/java/<你的包名>/MainApplication.java`：
 
 ```java
 ...
@@ -121,8 +142,8 @@ public class MainApplication extends Application implements ReactApplication {
    @Override
   public void onCreate() {
    super.onCreate();
-    Foreground.init(this);
-    IMApplication.pushInit(this, MainActivity.class);
+    Foreground.init(this); //然后添加这一行
+    IMApplication.pushInit(this, MainActivity.class);// 然后添加这一行
     SoLoader.init(this, /* native exopackage */ false);
    ...
   }
@@ -139,7 +160,12 @@ public class MainApplication extends Application implements ReactApplication {
 #### Android配置
 
 在`android/app/build.gradle`里，defaultConfig栏目下添加如下代码：
-
+```
+ manifestPlaceholders = [
+                IM_APPID     : xxxxxx, //你的SDKAPPID
+                IM_ACCOUNT_TYPE     : xxxx //你的ACCCOUNTTYPE
+        ]
+```
 
 在`AndroidManifest.xml`里，添加如下代码：
 ```
@@ -182,4 +208,3 @@ NativeAppEventEmitter.addListener("observeCurrentMessage",(data)=>{
 待补充
 
 ```
-
