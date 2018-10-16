@@ -103,11 +103,11 @@ public class TXImModule extends ReactContextBaseJavaModule {
                 isInit = true;
                 promise.resolve(true);
             } else {
-                promise.reject(-1, "初始化失败")
+                promise.reject("-1", "初始化失败")
             }
         } catch (Exception e) {
             e.printStackTrace();
-            promise.reject("-1", e.getMessage);
+            promise.reject("-1", e.getMessage());
         }
     }
 
