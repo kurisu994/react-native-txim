@@ -99,9 +99,9 @@ public class MainActivity extends ReactActivity {
 
 ```java
 ...
-import cn.kurisu.reactnativedemo.IMApplication;
-import cn.kurisu.reactnativedemo.TXImPackage;
-import cn.kurisu.reactnativedemo.utils.Foreground;
+import cn.kurisu.rnim.IMApplication;
+import cn.kurisu.rnim.TXImPackage;
+import cn.kurisu.rnim.utils.Foreground;
 
 public class MainApplication extends Application implements ReactApplication {
 
