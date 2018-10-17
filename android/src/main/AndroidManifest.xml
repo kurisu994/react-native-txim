@@ -7,21 +7,21 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <!-- mi push -->
     <permission
-        android:name="cn.kurisu.reactnativedemo.permission.MIPUSH_RECEIVE"
+        android:name="com.fwApp.permission.MIPUSH_RECEIVE"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="cn.kurisu.reactnativedemo.permission.MIPUSH_RECEIVE" />
+    <uses-permission android:name="com.fwApp.reactnativedemo.permission.MIPUSH_RECEIVE" />
 
     <!--mz push-->
     <!-- 兼容flyme5.0以下版本，魅族内部集成pushSDK必填，不然无法收到消息-->
     <uses-permission android:name="com.meizu.flyme.push.permission.RECEIVE" />
-    <permission android:name="cn.kurisu.reactnativedemo.push.permission.MESSAGE" android:protectionLevel="signature"/>
-    <uses-permission android:name="cn.kurisu.reactnativedemo.push.permission.MESSAGE" />
+    <permission android:name="com.fwApp.push.permission.MESSAGE" android:protectionLevel="signature"/>
+    <uses-permission android:name="com.fwApp.push.permission.MESSAGE" />
 
     <!--  兼容flyme3.0配置权限-->
     <uses-permission android:name="com.meizu.c2dm.permission.RECEIVE" />
     <permission
-        android:name="cn.kurisu.reactnativedemo.permission.C2D_MESSAGE"
+        android:name="cn.kurisu.rnim.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
     <uses-permission android:name="com.tencent.qcloud.timchat.permission.C2D_MESSAGE"/>
 
@@ -212,7 +212,7 @@
                 <action android:name="com.meizu.c2dm.intent.REGISTRATION" />
                 <action android:name="com.meizu.c2dm.intent.RECEIVE" />
 
-                <category android:name="com.tencent.qcloud.timchat" />
+                <category android:name="com.fwapp" />
             </intent-filter>
         </receiver>
 
