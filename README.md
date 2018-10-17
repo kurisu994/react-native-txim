@@ -68,9 +68,10 @@ dependencies {
 `android/app/src/main/java/<你的包名>/MainActivity.java`
 
 ```java
-import com.netease.im.uikit.permission.MPermission;
-import com.netease.im.RNNeteaseImModule;
-import com.netease.im.ReceiverMsgParser;
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.os.Bundle;
 
 public class MainActivity extends ReactActivity {
 
