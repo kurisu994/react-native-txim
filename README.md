@@ -15,6 +15,7 @@ android{
             abiFilters "armeabi-v7a", "x86"
         }
     }
+    //新增下面代码
      packagingOptions {
         pickFirst 'lib/armeabi-v7a/libgnustl_shared.so'
         pickFirst 'lib/x86/libgnustl_shared.so'
@@ -24,22 +25,6 @@ android{
             targetCompatibility 1.8
             sourceCompatibility 1.8
         }
-}
-4.//file:android/build.gradle
-
-allprojects {
-    repositories {
-        mavenLocal()
-        jcenter()
-        maven {
-            // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
-            url "$rootDir/../node_modules/react-native/android"
-        }
-        // jitpack repo is necessary to fetch ucrop dependency
-        maven { url "https://jitpack.io" }
-        maven { url "https://maven.google.com" }
-        maven {url 'http://developer.huawei.com/repo/'} //添加这一行
-    }
 }
 
 ```
