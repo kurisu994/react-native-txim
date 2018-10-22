@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
@@ -57,6 +58,7 @@ public class TXImModule extends ReactContextBaseJavaModule {
     private final int pushId = 1;
     public static ChatPresenter presenter;
     public ConversationPresenter conversationPresenter = new ConversationPresenter();
+    private ReactContext reactContext;
 
     public TXImModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -288,7 +290,7 @@ public class TXImModule extends ReactContextBaseJavaModule {
      * @param params
      */
     public void sendEvent(String eventName, @Nullable WritableMap params) {
-        getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(eventName, params);
+        this.reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(eventName, params);
     }
 
     @Override
@@ -317,6 +319,9 @@ public class TXImModule extends ReactContextBaseJavaModule {
         pushNum = 0;
     }
 
+    public void setContext(ReactApplicationContext reactContext){
+        this.reactContext = reactContext;
+    }
     public void reset() {
         NotificationManager notificationManager = (NotificationManager) IMApplication.getContext().getSystemService(NOTIFICATION_SERVICE);
         notificationManager.cancel(pushId);

@@ -48,7 +48,7 @@ public class ReactCache {
             read = true;
         }
         Message message = MessageFactory.getMessage(timMsg);
-        String timestamp = TimeUtil.getTimeStr(timMsg.timestamp());
+        String timestamp = String.valueOf(timMsg.timestamp()*1000);
         map.putBoolean("isSelf", timMsg.isSelf());
         if (!timMsg.isSelf()) {
             TIMUserProfile senderProfile = timMsg.getSenderProfile();
@@ -93,7 +93,7 @@ public class ReactCache {
                     read = true;
                 }
                 Message message = MessageFactory.getMessage(timMsg);
-                String timestamp = TimeUtil.getTimeStr(timMsg.timestamp());
+                String timestamp = String.valueOf(timMsg.timestamp()*1000);
                 map.putBoolean("isSelf", timMsg.isSelf());
                 if (!timMsg.isSelf()) {
                     TIMUserProfile senderProfile = timMsg.getSenderProfile();
