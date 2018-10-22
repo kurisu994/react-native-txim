@@ -19,6 +19,7 @@ public class TXImPackage implements ReactPackage {
         if (txImModule == null) {
             txImModule = new TXImModule(reactContext);
         }
+        txImModule.setContext(reactContext);
         modules.add(txImModule);
         return modules;
     }
