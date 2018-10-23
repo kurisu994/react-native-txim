@@ -6,7 +6,6 @@ import com.tencent.imsdk.TIMMessage;
 import java.util.Observable;
 import java.util.Observer;
 
-import cn.kurisu.rnim.TXImModule;
 import cn.kurisu.rnim.TXImPackage;
 import cn.kurisu.rnim.event.FriendshipEvent;
 import cn.kurisu.rnim.event.GroupEvent;
@@ -41,9 +40,7 @@ public class ConversationPresenter implements Observer {
                 TIMMessage msg = (TIMMessage) data;
                 WritableMap writableMap = ReactCache.createMessage(msg);
                 if (writableMap != null) {
-                    if (TXImModule.presenter == null || !TXImModule.presenter.getConversation().getPeer().equals(msg.getConversation().getPeer())) {
-                        TXImPackage.txImModule.sendEvent(observeReceiveMessage, writableMap);
-                    }
+                    TXImPackage.txImModule.sendEvent(observeReceiveMessage, writableMap);
                 }
             }
         } else if (observable instanceof FriendshipEvent) {

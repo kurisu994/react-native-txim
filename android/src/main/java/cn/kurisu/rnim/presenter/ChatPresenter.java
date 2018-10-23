@@ -27,6 +27,7 @@ import cn.kurisu.rnim.event.RefreshEvent;
 import cn.kurisu.rnim.utils.ReactCache;
 
 import static cn.kurisu.rnim.utils.ReactCache.observeCurrentMessage;
+import static cn.kurisu.rnim.utils.ReactCache.observeReceiveMessage;
 
 /**
  * 聊天界面逻辑
@@ -91,6 +92,7 @@ public class ChatPresenter implements Observer {
                 //错误码 code 含义请参见错误码表
                 promise.reject(String.valueOf(code), desc);
             }
+
             @Override
             public void onSuccess(TIMMessage msg) {//发送消息成功
                 promise.resolve(true);
@@ -111,6 +113,7 @@ public class ChatPresenter implements Observer {
             @Override
             public void onError(int i, String s) {
             }
+
             @Override
             public void onSuccess(TIMMessage message) {
             }
@@ -150,14 +153,10 @@ public class ChatPresenter implements Observer {
     @Override
     public void update(Observable observable, Object data) {
         if (observable instanceof MessageEvent) {
-            if (data instanceof TIMMessage) {
+            if (data instanceof TIMMessage || data == null) {
                 TIMMessage msg = (TIMMessage) data;
-                if (msg.isSelf()||(msg.getConversation().getPeer().equals(conversation.getPeer()) && msg.getConversation().getType() == conversation.getType())) {
-                    //当前聊天界面已读上报，用于多终端登录时未读消息数同步
-                    WritableMap writableMap = ReactCache.createMessage(msg);
-                    if (writableMap != null) {
-                        TXImPackage.txImModule.sendEvent(observeCurrentMessage, writableMap);
-                    }
+                //当前聊天界面已读上报，用于多终端登录时未读消息数同步
+                if(msg==null||msg.getConversation().getPeer().equals(conversation.getPeer())&&msg.getConversation().getType()==conversation.getType()){
                     readMessages();
                 }
             } else if (data instanceof TIMMessageLocator) {
@@ -190,7 +189,7 @@ public class ChatPresenter implements Observer {
                     isGetingMessage = false;
                     WritableMap writableMap = ReactCache.createMessage(timMessages);
                     if (writableMap != null) {
-                        TXImPackage.txImModule.sendEvent(observeCurrentMessage, writableMap);
+                        TXImPackage.txImModule.sendEvent(observeReceiveMessage, writableMap);
                     }
                 }
             });
