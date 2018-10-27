@@ -17,7 +17,7 @@ import com.tencent.imsdk.TIMOfflinePushToken;
 public class HwPushMessageReceiver extends PushEventReceiver {
     private final String TAG = "HwPushMessageReceiver";
 
-    private long mBussId = 4414;
+    private long mBussId = 4455;
 
 
 
