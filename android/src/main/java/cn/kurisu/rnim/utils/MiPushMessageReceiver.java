@@ -32,7 +32,7 @@ public class MiPushMessageReceiver extends PushMessageReceiver {
     private String mStartTime;
     private String mEndTime;
 
-    private long mBussId = 4415;
+    private long mBussId = 4454;
 
     @Override
     public void onReceivePassThroughMessage(Context context, MiPushMessage message) {

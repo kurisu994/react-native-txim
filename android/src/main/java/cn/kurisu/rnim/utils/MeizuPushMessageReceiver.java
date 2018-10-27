@@ -22,7 +22,7 @@ public class MeizuPushMessageReceiver extends MzPushMessageReceiver {
 
     private static final String TAG = MeizuPushMessageReceiver.class.getSimpleName();
 
-    private static final int busiid = 4416;
+    private static final int busiid = 4456;
 
     /**
      * 已废弃接口，不建议使用
