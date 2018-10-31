@@ -20,7 +20,6 @@ import cn.kurisu.rnim.event.RefreshEvent;
 import tencent.tls.platform.TLSAccountHelper;
 import tencent.tls.platform.TLSLoginHelper;
 
-import static cn.kurisu.rnim.utils.ReactCache.observeUserStatus;
 import static cn.kurisu.rnim.utils.ReactCache.observeOnlineStatus;
 
 
@@ -77,7 +76,7 @@ public class InitBusiness {
                 Log.d(TAG, "被其他终端踢下线了");
                 WritableMap map = Arguments.createMap();
                 map.putInt("code", 6023);
-                TXImPackage.txImModule.sendEvent(observeUserStatus, map);
+                TXImPackage.txImModule.sendEvent(observeOnlineStatus, map);
             }
 
             @Override
@@ -85,7 +84,7 @@ public class InitBusiness {
                 Log.i(TAG, "onUserSigExpired: 需要重新登陆");
                 WritableMap map = Arguments.createMap();
                 map.putInt("code", 70001);
-                TXImPackage.txImModule.sendEvent(observeUserStatus, map);
+                TXImPackage.txImModule.sendEvent(observeOnlineStatus, map);
             }
         }).setConnectionListener(new TIMConnListener() {
             @Override
