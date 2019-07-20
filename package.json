@@ -1,0 +1,35 @@
+{
+  "name": "react-native-txim",
+  "version": "0.3.0",
+  "description": "腾讯IM的RN集成 β版",
+  "main": "index.js",
+  "directories": {
+    "android": "android",
+    "ios": "ios",
+    "lib": "lib"
+  },
+  "scripts": {
+    "npm:publish": "npm --registry https://registry.npmjs.org/ publish",
+    "npm:sync": "cnpm sync fw-rn-txim",
+    "pod:lint": "export LANG=en_US.UTF-8 && pod lib lint TXIm.podspec",
+    "pod:install": "cd ios && export LANG=en_US.UTF-8 && pod install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kurisu994/react-native-txim.git"
+  },
+  "keywords": [
+    "react-native",
+    "txim"
+  ],
+  "author": "kurisu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kurisu994/react-native-txim/issues"
+  },
+  "homepage": "https://github.com/kurisu994/react-native-txim/blob/master/README.md",
+  "peerDependencies": {
+    "react": "^16.8",
+    "react-native": "^0.59"
+  }
+}

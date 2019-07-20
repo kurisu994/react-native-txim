@@ -1,0 +1,22 @@
+//
+//  txim.pch
+//  RCTTxim
+//
+//  Created by 张建军 on 2019/5/6.
+//  Copyright © 2019 feewee. All rights reserved.
+//
+
+#ifndef txim_pch
+#define txim_pch
+
+#import <ImSDK/ImSDK.h>
+
+#define TM_INSTANCE [TIMManager sharedInstance]
+#define DEFINE_TM(NAME) TIMManager *NAME = TM_INSTANCE
+#define IM_LOG(LEVEL, TAG, MSG, ...) [TM_INSTANCE log:LEVEL tag:TAG msg:[NSString stringWithFormat:MSG, ##__VA_ARGS__]]
+#define IM_LOG_TAG_DEBUG(TAG, MSG, ...) IM_LOG(TIM_LOG_DEBUG, TAG, MSG, ##__VA_ARGS__)
+#define IM_LOG_TAG_INFO(TAG, MSG, ...) IM_LOG(TIM_LOG_INFO, TAG, MSG, ##__VA_ARGS__)
+#define IM_LOG_TAG_WARN(TAG, MSG, ...) IM_LOG(TIM_LOG_WARN, TAG, MSG, ##__VA_ARGS__)
+#define IM_LOG_TAG_ERROR(TAG, MSG, ...) IM_LOG(TIM_LOG_ERROR, TAG, MSG, ##__VA_ARGS__)
+
+#endif /* txim_pch */

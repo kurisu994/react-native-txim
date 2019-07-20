@@ -1,0 +1,453 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		7B34200E88983D661ED5597A /* libPods-RCTTxim.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D8A16B74F2CFD37191617522 /* libPods-RCTTxim.a */; };
+		9B9AF81D227EB651002F16F3 /* ImSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B9AF81C227EB651002F16F3 /* ImSDK.framework */; };
+		9B9AF821227EB6DF002F16F3 /* IMInitializeModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B9AF820227EB6DF002F16F3 /* IMInitializeModule.m */; };
+		9B9AF824227EB6FF002F16F3 /* IMMessageModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B9AF823227EB6FF002F16F3 /* IMMessageModule.m */; };
+		9BA40BCE227EC2AE00C155F8 /* IMEventNameConstant.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BA40BCD227EC2AE00C155F8 /* IMEventNameConstant.m */; };
+		9BA40BD1227EC70F00C155F8 /* IMManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BA40BD0227EC70F00C155F8 /* IMManager.m */; };
+		9BA40BE7227EEAFB00C155F8 /* IMBaseListener.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BA40BE6227EEAFB00C155F8 /* IMBaseListener.m */; };
+		9BA40BEA227EECC700C155F8 /* IMConnListener.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BA40BE9227EECC700C155F8 /* IMConnListener.m */; };
+		9BA40BEF227EF6C800C155F8 /* IMUserStatusListener.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BA40BEE227EF6C800C155F8 /* IMUserStatusListener.m */; };
+		9BA40BF2227EF6F900C155F8 /* IMMessageListener.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BA40BF1227EF6F900C155F8 /* IMMessageListener.m */; };
+		9BA40BF6227F0A7000C155F8 /* IMMessageInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BA40BF5227F0A7000C155F8 /* IMMessageInfo.m */; };
+		9BA40BF9227F0AB100C155F8 /* IMMessageBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BA40BF8227F0AB100C155F8 /* IMMessageBuilder.m */; };
+		9BA40CCF2280073100C155F8 /* RCTEventEmitter+IMBaseModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BA40CCE2280073100C155F8 /* RCTEventEmitter+IMBaseModule.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		9B9AF80E227E93BF002F16F3 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		873933286FBDBEECEE87EBB7 /* Pods-RCTTxim.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RCTTxim.debug.xcconfig"; path = "Target Support Files/Pods-RCTTxim/Pods-RCTTxim.debug.xcconfig"; sourceTree = "<group>"; };
+		9B9AF810227E93BF002F16F3 /* libRCTTxim.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRCTTxim.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		9B9AF81C227EB651002F16F3 /* ImSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ImSDK.framework; sourceTree = "<group>"; };
+		9B9AF81F227EB6DF002F16F3 /* IMInitializeModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IMInitializeModule.h; sourceTree = "<group>"; };
+		9B9AF820227EB6DF002F16F3 /* IMInitializeModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IMInitializeModule.m; sourceTree = "<group>"; };
+		9B9AF822227EB6FF002F16F3 /* IMMessageModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IMMessageModule.h; sourceTree = "<group>"; };
+		9B9AF823227EB6FF002F16F3 /* IMMessageModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IMMessageModule.m; sourceTree = "<group>"; };
+		9BA40BCC227EC2AE00C155F8 /* IMEventNameConstant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IMEventNameConstant.h; sourceTree = "<group>"; };
+		9BA40BCD227EC2AE00C155F8 /* IMEventNameConstant.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IMEventNameConstant.m; sourceTree = "<group>"; };
+		9BA40BCF227EC70F00C155F8 /* IMManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IMManager.h; sourceTree = "<group>"; };
+		9BA40BD0227EC70F00C155F8 /* IMManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IMManager.m; sourceTree = "<group>"; };
+		9BA40BE5227EEAFB00C155F8 /* IMBaseListener.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IMBaseListener.h; sourceTree = "<group>"; };
+		9BA40BE6227EEAFB00C155F8 /* IMBaseListener.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IMBaseListener.m; sourceTree = "<group>"; };
+		9BA40BE8227EECC700C155F8 /* IMConnListener.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IMConnListener.h; sourceTree = "<group>"; };
+		9BA40BE9227EECC700C155F8 /* IMConnListener.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IMConnListener.m; sourceTree = "<group>"; };
+		9BA40BED227EF6C800C155F8 /* IMUserStatusListener.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IMUserStatusListener.h; sourceTree = "<group>"; };
+		9BA40BEE227EF6C800C155F8 /* IMUserStatusListener.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IMUserStatusListener.m; sourceTree = "<group>"; };
+		9BA40BF0227EF6F900C155F8 /* IMMessageListener.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IMMessageListener.h; sourceTree = "<group>"; };
+		9BA40BF1227EF6F900C155F8 /* IMMessageListener.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IMMessageListener.m; sourceTree = "<group>"; };
+		9BA40BF4227F0A7000C155F8 /* IMMessageInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IMMessageInfo.h; sourceTree = "<group>"; };
+		9BA40BF5227F0A7000C155F8 /* IMMessageInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IMMessageInfo.m; sourceTree = "<group>"; };
+		9BA40BF7227F0AB100C155F8 /* IMMessageBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IMMessageBuilder.h; sourceTree = "<group>"; };
+		9BA40BF8227F0AB100C155F8 /* IMMessageBuilder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IMMessageBuilder.m; sourceTree = "<group>"; };
+		9BA40CAD227FE3A300C155F8 /* txim.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = txim.pch; sourceTree = "<group>"; };
+		9BA40CCD2280073100C155F8 /* RCTEventEmitter+IMBaseModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RCTEventEmitter+IMBaseModule.h"; sourceTree = "<group>"; };
+		9BA40CCE2280073100C155F8 /* RCTEventEmitter+IMBaseModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "RCTEventEmitter+IMBaseModule.m"; sourceTree = "<group>"; };
+		D8A16B74F2CFD37191617522 /* libPods-RCTTxim.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RCTTxim.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EDB5D1CC18A2822227069422 /* Pods-RCTTxim.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RCTTxim.release.xcconfig"; path = "Target Support Files/Pods-RCTTxim/Pods-RCTTxim.release.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		9B9AF80D227E93BF002F16F3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7B34200E88983D661ED5597A /* libPods-RCTTxim.a in Frameworks */,
+				9B9AF81D227EB651002F16F3 /* ImSDK.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		98E47201EFDF61CEDC4428C0 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				873933286FBDBEECEE87EBB7 /* Pods-RCTTxim.debug.xcconfig */,
+				EDB5D1CC18A2822227069422 /* Pods-RCTTxim.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		9B9AF807227E93BF002F16F3 = {
+			isa = PBXGroup;
+			children = (
+				9B9AF812227E93BF002F16F3 /* RCTTxim */,
+				9B9AF811227E93BF002F16F3 /* Products */,
+				98E47201EFDF61CEDC4428C0 /* Pods */,
+				9D44E2D35D47BACDF7E52AC1 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		9B9AF811227E93BF002F16F3 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9B9AF810227E93BF002F16F3 /* libRCTTxim.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9B9AF812227E93BF002F16F3 /* RCTTxim */ = {
+			isa = PBXGroup;
+			children = (
+				9B9AF81C227EB651002F16F3 /* ImSDK.framework */,
+				9BA40BCF227EC70F00C155F8 /* IMManager.h */,
+				9BA40BD0227EC70F00C155F8 /* IMManager.m */,
+				9BA40BCB227EC22D00C155F8 /* Constant */,
+				9BA40BE4227EEAAC00C155F8 /* Listener */,
+				9BA40BF3227F0A5100C155F8 /* Message */,
+				9B9AF81E227EB673002F16F3 /* Module */,
+				9BA40CAD227FE3A300C155F8 /* txim.pch */,
+			);
+			path = RCTTxim;
+			sourceTree = "<group>";
+		};
+		9B9AF81E227EB673002F16F3 /* Module */ = {
+			isa = PBXGroup;
+			children = (
+				9B9AF81F227EB6DF002F16F3 /* IMInitializeModule.h */,
+				9B9AF820227EB6DF002F16F3 /* IMInitializeModule.m */,
+				9B9AF822227EB6FF002F16F3 /* IMMessageModule.h */,
+				9B9AF823227EB6FF002F16F3 /* IMMessageModule.m */,
+				9BA40CCD2280073100C155F8 /* RCTEventEmitter+IMBaseModule.h */,
+				9BA40CCE2280073100C155F8 /* RCTEventEmitter+IMBaseModule.m */,
+			);
+			path = Module;
+			sourceTree = "<group>";
+		};
+		9BA40BCB227EC22D00C155F8 /* Constant */ = {
+			isa = PBXGroup;
+			children = (
+				9BA40BCC227EC2AE00C155F8 /* IMEventNameConstant.h */,
+				9BA40BCD227EC2AE00C155F8 /* IMEventNameConstant.m */,
+			);
+			path = Constant;
+			sourceTree = "<group>";
+		};
+		9BA40BE4227EEAAC00C155F8 /* Listener */ = {
+			isa = PBXGroup;
+			children = (
+				9BA40BE5227EEAFB00C155F8 /* IMBaseListener.h */,
+				9BA40BE6227EEAFB00C155F8 /* IMBaseListener.m */,
+				9BA40BE8227EECC700C155F8 /* IMConnListener.h */,
+				9BA40BE9227EECC700C155F8 /* IMConnListener.m */,
+				9BA40BED227EF6C800C155F8 /* IMUserStatusListener.h */,
+				9BA40BEE227EF6C800C155F8 /* IMUserStatusListener.m */,
+				9BA40BF0227EF6F900C155F8 /* IMMessageListener.h */,
+				9BA40BF1227EF6F900C155F8 /* IMMessageListener.m */,
+			);
+			path = Listener;
+			sourceTree = "<group>";
+		};
+		9BA40BF3227F0A5100C155F8 /* Message */ = {
+			isa = PBXGroup;
+			children = (
+				9BA40BF4227F0A7000C155F8 /* IMMessageInfo.h */,
+				9BA40BF5227F0A7000C155F8 /* IMMessageInfo.m */,
+				9BA40BF7227F0AB100C155F8 /* IMMessageBuilder.h */,
+				9BA40BF8227F0AB100C155F8 /* IMMessageBuilder.m */,
+			);
+			path = Message;
+			sourceTree = "<group>";
+		};
+		9D44E2D35D47BACDF7E52AC1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D8A16B74F2CFD37191617522 /* libPods-RCTTxim.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		9B9AF80F227E93BF002F16F3 /* RCTTxim */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9B9AF819227E93BF002F16F3 /* Build configuration list for PBXNativeTarget "RCTTxim" */;
+			buildPhases = (
+				DF932D456253ED8C5B764C40 /* [CP] Check Pods Manifest.lock */,
+				9B9AF80C227E93BF002F16F3 /* Sources */,
+				9B9AF80D227E93BF002F16F3 /* Frameworks */,
+				9B9AF80E227E93BF002F16F3 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = RCTTxim;
+			productName = RCTTxim;
+			productReference = 9B9AF810227E93BF002F16F3 /* libRCTTxim.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		9B9AF808227E93BF002F16F3 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = IM;
+				LastUpgradeCheck = 1020;
+				ORGANIZATIONNAME = feewee;
+				TargetAttributes = {
+					9B9AF80F227E93BF002F16F3 = {
+						CreatedOnToolsVersion = 10.2.1;
+					};
+				};
+			};
+			buildConfigurationList = 9B9AF80B227E93BF002F16F3 /* Build configuration list for PBXProject "RCTTxim" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 9B9AF807227E93BF002F16F3;
+			productRefGroup = 9B9AF811227E93BF002F16F3 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				9B9AF80F227E93BF002F16F3 /* RCTTxim */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		DF932D456253ED8C5B764C40 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-RCTTxim-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		9B9AF80C227E93BF002F16F3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9BA40BEF227EF6C800C155F8 /* IMUserStatusListener.m in Sources */,
+				9BA40BEA227EECC700C155F8 /* IMConnListener.m in Sources */,
+				9B9AF821227EB6DF002F16F3 /* IMInitializeModule.m in Sources */,
+				9BA40BF6227F0A7000C155F8 /* IMMessageInfo.m in Sources */,
+				9BA40CCF2280073100C155F8 /* RCTEventEmitter+IMBaseModule.m in Sources */,
+				9BA40BF2227EF6F900C155F8 /* IMMessageListener.m in Sources */,
+				9B9AF824227EB6FF002F16F3 /* IMMessageModule.m in Sources */,
+				9BA40BCE227EC2AE00C155F8 /* IMEventNameConstant.m in Sources */,
+				9BA40BD1227EC70F00C155F8 /* IMManager.m in Sources */,
+				9BA40BF9227F0AB100C155F8 /* IMMessageBuilder.m in Sources */,
+				9BA40BE7227EEAFB00C155F8 /* IMBaseListener.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		9B9AF817227E93BF002F16F3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		9B9AF818227E93BF002F16F3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		9B9AF81A227E93BF002F16F3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 873933286FBDBEECEE87EBB7 /* Pods-RCTTxim.debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = SUXP8NP34S;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/RCTTxim",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/RCTTxim/txim.pch";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		9B9AF81B227E93BF002F16F3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = EDB5D1CC18A2822227069422 /* Pods-RCTTxim.release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = SUXP8NP34S;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/RCTTxim",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/RCTTxim/txim.pch";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		9B9AF80B227E93BF002F16F3 /* Build configuration list for PBXProject "RCTTxim" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9B9AF817227E93BF002F16F3 /* Debug */,
+				9B9AF818227E93BF002F16F3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9B9AF819227E93BF002F16F3 /* Build configuration list for PBXNativeTarget "RCTTxim" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9B9AF81A227E93BF002F16F3 /* Debug */,
+				9B9AF81B227E93BF002F16F3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 9B9AF808227E93BF002F16F3 /* Project object */;
+}
