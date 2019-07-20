@@ -77,6 +77,17 @@ android{
     
 }
 ```
+> file: android/build.gradle 
+```shell
+allprojects {
+    repositories {
+        ....
+        // 华为离线推送
+        maven {url 'http://developer.huawei.com/repo/'}
+    }
+}
+```
+
 > file: android/app/src/AndroidManifest.xml
 
 ```xml
