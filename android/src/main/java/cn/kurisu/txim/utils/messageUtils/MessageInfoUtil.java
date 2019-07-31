@@ -1,14 +1,12 @@
-package cn.kurisu.txim.utils.messageUtils;
+package cn.fw.txim.utils.messageUtils;
 
 import android.net.Uri;
 import android.text.TextUtils;
 
-import cn.kurisu.txim.constants.Constants;
-import cn.kurisu.txim.utils.FileUtil;
-import cn.kurisu.txim.utils.ImageUtil;
+import cn.fw.txim.constants.Constants;
+import cn.fw.txim.utils.FileUtil;
+import cn.fw.txim.utils.ImageUtil;
 import com.tencent.imsdk.TIMCallBack;
-import com.tencent.imsdk.TIMConversation;
-import com.tencent.imsdk.TIMConversationType;
 import com.tencent.imsdk.TIMCustomElem;
 import com.tencent.imsdk.TIMElem;
 import com.tencent.imsdk.TIMElemType;
@@ -267,11 +265,11 @@ public class MessageInfoUtil {
 
 
     public static MessageInfo TIMMessage2MessageInfo(TIMMessage timMessage, boolean isGroup) {
-        if (timMessage == null || timMessage.status() == TIMMessageStatus.HasDeleted)
-            return null;
-        String sender = timMessage.getSender();
-
         final MessageInfo msgInfo = new MessageInfo();
+        if (timMessage == null || timMessage.status() == TIMMessageStatus.HasDeleted) {
+            return null;
+        }
+        String sender = timMessage.getSender();
         msgInfo.setTIMMessage(timMessage);
         msgInfo.setGroup(isGroup);
         msgInfo.setMsgId(timMessage.getMsgId());
@@ -293,17 +291,14 @@ public class MessageInfoUtil {
                 @Override
                 public void onSuccess(TIMUserProfile timUserProfile) {
                     msgInfo.setAvatar(timUserProfile.getFaceUrl());
-                    msgInfo.setNickName(timUserProfile.getNickName());
+                    msgInfo.setNickName(timUserProfile.getNickName() == null ? "" : timUserProfile.getNickName());
                 }
             });
-           
             msgInfo.setFromUser(sender);
         }
         msgInfo.setMsgTime(timMessage.timestamp() * 1000);
         msgInfo.setPeer(timMessage.getConversation().getPeer());
         msgInfo.setSelf(sender.equals(TIMManager.getInstance().getLoginUser()));
-        TIMConversation conversation = timMessage.getConversation();
-        TIMConversationType conversationType = conversation.getType();
         if (timMessage.getElementCount() > 0) {
             TIMElem ele = timMessage.getElement(0);
 

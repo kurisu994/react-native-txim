@@ -1,13 +1,13 @@
-package cn.kurisu.txim.listener;
+package cn.fw.txim.listener;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
-import cn.kurisu.txim.constants.IMEventNameConstant;
-import cn.kurisu.txim.module.BaseModule;
-import cn.kurisu.txim.utils.PushUtil;
-import cn.kurisu.txim.utils.messageUtils.MessageInfo;
-import cn.kurisu.txim.utils.messageUtils.MessageInfoUtil;
+import cn.fw.txim.constants.IMEventNameConstant;
+import cn.fw.txim.module.BaseModule;
+import cn.fw.txim.utils.PushUtil;
+import cn.fw.txim.utils.messageUtils.MessageInfo;
+import cn.fw.txim.utils.messageUtils.MessageInfoUtil;
 import com.tencent.imsdk.TIMMessage;
 import com.tencent.imsdk.TIMMessageListener;
 import com.tencent.imsdk.log.QLog;
@@ -25,19 +25,22 @@ public class MessageEventListener extends BaseListener implements TIMMessageList
      * @param msgs 收到的新消息
      */
     public boolean onNewMessages(List<TIMMessage> msgs) {
-        QLog.i("收到消息", "recv onNewMessages, size " + (msgs != null ? msgs.size() : 0));
         List<MessageInfo> messageInfos = MessageInfoUtil.TIMMessages2MessageInfos(msgs, false);
         MessageInfo info = messageInfos.get(0);
-        WritableArray writableArray = messageAnalysis(messageInfos);
-        module.sendEvent(IMEventNameConstant.ON_NEW_MESSAGE, writableArray);
-        int type = info.getMsgType();
-        if (MessageInfo.MSG_TYPE_CUSTOM == type) {
-            PushUtil.getInstance().PushNotify(info.getData(), info.getDesc());
+        if (info.getNickName() != null) {
+            QLog.i("收到消息", "recv onNewMessages, size " + (msgs != null ? msgs.size() : 0));
+            WritableArray writableArray = messageAnalysis(messageInfos);
+            module.sendEvent(IMEventNameConstant.ON_NEW_MESSAGE, writableArray);
+            int type = info.getMsgType();
+            if (MessageInfo.MSG_TYPE_CUSTOM == type) {
+                PushUtil.getInstance().PushNotify(info.getData(), info.getDesc());
+            } else {
+                PushUtil.getInstance().PushNotify(info.getNickName(), info.getExtra().toString());
+            }
         } else {
-            PushUtil.getInstance().PushNotify(info.getNickName(), info.getExtra().toString());
+            this.onNewMessages(msgs);
         }
-
-        return false;
+        return true;
     }
 
     /**
