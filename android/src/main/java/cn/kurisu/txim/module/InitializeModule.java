@@ -84,7 +84,7 @@ public class InitializeModule extends BaseModule {
                 map.putInt("code", errCode);
                 map.putString("msg", errMsg);
 
-                Toast.makeText(getReactApplicationContext(), errCode, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getReactApplicationContext(), String.valueOf(errCode), Toast.LENGTH_SHORT).show();
                 QLog.e("登录信息", "code:" + errCode + "    " + "msg:" + errMsg);
                 sendEvent(IMEventNameConstant.LOGIN_STATUS, map);
             }
