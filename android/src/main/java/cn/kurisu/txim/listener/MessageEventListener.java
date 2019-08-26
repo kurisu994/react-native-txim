@@ -3,11 +3,13 @@ package cn.fw.txim.listener;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
+
 import cn.fw.txim.constants.IMEventNameConstant;
 import cn.fw.txim.module.BaseModule;
 import cn.fw.txim.utils.PushUtil;
 import cn.fw.txim.utils.messageUtils.MessageInfo;
 import cn.fw.txim.utils.messageUtils.MessageInfoUtil;
+
 import com.tencent.imsdk.TIMMessage;
 import com.tencent.imsdk.TIMMessageListener;
 import com.tencent.imsdk.log.QLog;
@@ -35,7 +37,7 @@ public class MessageEventListener extends BaseListener implements TIMMessageList
             if (MessageInfo.MSG_TYPE_CUSTOM == type) {
                 PushUtil.getInstance().PushNotify(info.getData(), info.getDesc());
             } else {
-                PushUtil.getInstance().PushNotify(info.getNickName(), info.getExtra().toString());
+                PushUtil.getInstance().PushNotify(info.getNickName(), info.getExtra() == null ? "" : info.getExtra().toString());
             }
         } else {
             this.onNewMessages(msgs);
@@ -45,6 +47,7 @@ public class MessageEventListener extends BaseListener implements TIMMessageList
 
     /**
      * 消息解析
+     *
      * @param list
      */
 
@@ -60,6 +63,7 @@ public class MessageEventListener extends BaseListener implements TIMMessageList
     }
 
     public static WritableMap messageAnalysis(MessageInfo info) {
+        System.out.println(info);
         WritableMap map = Arguments.createMap();
         map.putString("sender", info.getFromUser());
         map.putString("peer", info.getPeer());
@@ -69,7 +73,7 @@ public class MessageEventListener extends BaseListener implements TIMMessageList
         map.putBoolean("group", info.isGroup());
         map.putString("dataPath", info.getDataPath());
         map.putString("msgTime", String.valueOf(info.getMsgTime()));
-        map.putString("extra", info.getExtra().toString());
+        map.putString("extra", info.getExtra() == null ? "" : info.getExtra().toString());
         map.putInt("status", info.getStatus());
         map.putInt("msgType", info.getMsgType());
         map.putInt("imgWithd", info.getImgHeight());
