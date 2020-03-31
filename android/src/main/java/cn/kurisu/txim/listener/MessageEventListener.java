@@ -1,14 +1,14 @@
-package cn.fw.txim.listener;
+package cn.kurisu.txim.listener;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 
-import cn.fw.txim.constants.IMEventNameConstant;
-import cn.fw.txim.module.BaseModule;
-import cn.fw.txim.utils.PushUtil;
-import cn.fw.txim.utils.messageUtils.MessageInfo;
-import cn.fw.txim.utils.messageUtils.MessageInfoUtil;
+import cn.kurisu.txim.constants.IMEventNameConstant;
+import cn.kurisu.txim.module.BaseModule;
+import cn.kurisu.txim.utils.PushUtil;
+import cn.kurisu.txim.utils.messageUtils.MessageInfo;
+import cn.kurisu.txim.utils.messageUtils.MessageInfoUtil;
 
 import com.tencent.imsdk.TIMMessage;
 import com.tencent.imsdk.TIMMessageListener;
@@ -72,6 +72,7 @@ public class MessageEventListener extends BaseListener implements TIMMessageList
         map.putBoolean("read", info.isRead());
         map.putBoolean("group", info.isGroup());
         map.putString("dataPath", info.getDataPath());
+        map.putString("dataUri", info.getDataUri() == null ? "" : info.getDataUri().toString());
         map.putString("msgTime", String.valueOf(info.getMsgTime()));
         map.putString("extra", info.getExtra() == null ? "" : info.getExtra().toString());
         map.putInt("status", info.getStatus());

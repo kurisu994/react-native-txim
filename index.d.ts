@@ -18,6 +18,10 @@ export class IMChatModule {
   static destroyConversation: () => Promise<boolean>;
   /**发送文本消息*/
   static sendTextMsg: (text: string) => Promise<boolean>;
+  /**发送图片消息 original:是否发送原图 默认false*/
+  static sendImageMsg: (path: string, original?: boolean) => Promise<boolean>;
+  /**发送语音消息  duration：时长*/
+  static sendAudioMsg: (path: string, duration: number) => Promise<boolean>;
 }
 
 /**
@@ -69,6 +73,8 @@ export interface IMMessage {
   group: boolean,
   /**图片或者语音或者视频等的路径*/
   dataPath: string,
+  /**图片或者语音或者视频等的uri路径 自己发送的消息path就是是这个*/
+  dataUri: string,
   /**消息时间*/
   msgTime: string,
   /**消息展示项 自定义消息的话就是携带信息*/

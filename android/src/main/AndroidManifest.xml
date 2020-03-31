@@ -3,6 +3,15 @@
     package="cn.kurisu.txim">
 
     <application>
+      <provider
+          android:name="cn.kurisu.txim.utils.ImFileProvider"
+          android:authorities="${applicationId}.im.fileprovider"
+          android:exported="false"
+          android:grantUriPermissions="true">
+          <meta-data
+            android:name="android.support.FILE_PROVIDER_PATHS"
+            android:resource="@xml/im_provider_paths" />
+        </provider>
         <!--  消息收发 service -->
         <service
             android:name="com.tencent.imsdk.session.remote.SessionService"

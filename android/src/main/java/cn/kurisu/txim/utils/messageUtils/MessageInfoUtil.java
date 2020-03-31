@@ -1,11 +1,11 @@
-package cn.fw.txim.utils.messageUtils;
+package cn.kurisu.txim.utils.messageUtils;
 
 import android.net.Uri;
 import android.text.TextUtils;
 
-import cn.fw.txim.constants.Constants;
-import cn.fw.txim.utils.FileUtil;
-import cn.fw.txim.utils.ImageUtil;
+import cn.kurisu.txim.constants.Constants;
+import cn.kurisu.txim.utils.FileUtil;
+import cn.kurisu.txim.utils.ImageUtil;
 import com.tencent.imsdk.TIMCallBack;
 import com.tencent.imsdk.TIMCustomElem;
 import com.tencent.imsdk.TIMElem;
@@ -427,13 +427,17 @@ public class MessageInfoUtil {
                         for (int i = 0; i < imgs.size(); i++) {
                             TIMImage img = imgs.get(i);
                             if (img.getType() == TIMImageType.Thumb) {
-                                final String path = Constants.IMAGE_DOWNLOAD_DIR + img.getUuid();
-                                msgInfo.setImgWithd((int) img.getWidth());
-                                msgInfo.setImgHeight((int) img.getHeight());
-                                File file = new File(path);
-                                if (file.exists()) {
-                                    msgInfo.setDataPath(path);
-                                }
+                                //TODO 处理缩略图等情况
+//                                final String path = Constants.IMAGE_DOWNLOAD_DIR + img.getUuid();
+//                                msgInfo.setImgWithd((int) img.getWidth());
+//                                msgInfo.setImgHeight((int) img.getHeight());
+//                                File file = new File(path);
+//                                if (file.exists()) {
+//                                    msgInfo.setDataPath(path);
+//                                }
+                            }
+                            if (img.getType() == TIMImageType.Original) {
+                                msgInfo.setDataPath(img.getUrl());
                             }
                         }
                     }

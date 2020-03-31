@@ -8,7 +8,8 @@ import cn.kurisu.txim.business.InitializeBusiness;
 public class Constants {
 
     public static String SD_CARD_PATH = Environment.getExternalStorageDirectory().getAbsolutePath();
-    public static String APP_DIR = InitializeBusiness.getBaseConfigs().getAppCacheDir() != null ? InitializeBusiness.getBaseConfigs().getAppCacheDir() : SD_CARD_PATH + "/" + InitializeBusiness.getAppContext().getPackageName();
+    public static String APP_DIR = SD_CARD_PATH + "/" + InitializeBusiness.getAppContext().getPackageName();
+
     public static String RECORD_DIR = APP_DIR + "/record/";
     public static String RECORD_DOWNLOAD_DIR = APP_DIR + "/record/download/";
     public static String VIDEO_DOWNLOAD_DIR = APP_DIR + "/video/download/";

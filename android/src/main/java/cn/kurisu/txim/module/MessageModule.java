@@ -127,17 +127,17 @@ public class MessageModule extends BaseModule {
                 messageInfo = MessageInfoUtil.buildTextMessage(content);
                 break;
             case MessageInfo.MSG_TYPE_IMAGE:
-                Uri uri = Uri.fromFile(new File(Environment.getExternalStorageDirectory() + content));
+                Uri uri = Uri.fromFile(new File(content));
                 messageInfo = MessageInfoUtil.buildImageMessage(uri, compressed, false);
                 break;
             case MessageInfo.MSG_TYPE_AUDIO:
-                messageInfo = MessageInfoUtil.buildAudioMessage(Environment.getExternalStorageDirectory() + content, duration);
+                messageInfo = MessageInfoUtil.buildAudioMessage(content, duration);
                 break;
             case MessageInfo.MSG_TYPE_VIDEO:
-                messageInfo = MessageInfoUtil.buildVideoMessage(Environment.getExternalStorageDirectory() + imgPath, Environment.getExternalStorageDirectory() + content, width, height, duration);
+                messageInfo = MessageInfoUtil.buildVideoMessage(imgPath, content, width, height, duration);
                 break;
             case MessageInfo.MSG_TYPE_FILE:
-                Uri fileUri = Uri.fromFile(new File(Environment.getExternalStorageDirectory() + content));
+                Uri fileUri = Uri.fromFile(new File(content));
                 messageInfo = MessageInfoUtil.buildFileMessage(fileUri);
                 break;
             case MessageInfo.MSG_TYPE_LOCATION:

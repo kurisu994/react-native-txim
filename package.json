@@ -1,6 +1,6 @@
 {
   "name": "react-native-txim",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "腾讯IM的RN集成 β版",
   "main": "index.js",
   "directories": {
