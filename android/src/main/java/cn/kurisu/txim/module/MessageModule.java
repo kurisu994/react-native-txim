@@ -1,9 +1,6 @@
 package cn.kurisu.txim.module;
 
-import android.content.Context;
 import android.net.Uri;
-import android.os.Environment;
-import android.util.Log;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -22,6 +19,7 @@ import com.tencent.imsdk.TIMValueCallBack;
 import com.tencent.imsdk.log.QLog;
 
 import java.io.File;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -42,6 +40,63 @@ public class MessageModule extends BaseModule {
         return "IMMessageModule";
     }
 
+    @ReactMethod
+    public void getConversationList() {
+        final WritableMap map = Arguments.createMap();
+        try {
+            List<TIMConversation> list = TIMManager.getInstance().getConversationList();
+            WritableArray array = Arguments.createArray();
+            if (list != null) {
+                for (TIMConversation timConversation : list) {
+                    WritableMap objmap = Arguments.createMap();
+                    long unreadNum = timConversation.getUnreadMessageNum();
+                    TIMConversationType type = timConversation.getType();
+                    TIMMessage lastMsg = timConversation.getLastMsg();
+                    //解析消息
+                    MessageInfo messageInfo = MessageInfoUtil.TIMMessage2MessageInfo(lastMsg, TIMConversationType.Group.equals(type));
+                    String peer = timConversation.getPeer();
+                    String groupName = timConversation.getGroupName();
+
+                    objmap.putString("unread", String.valueOf(unreadNum));
+                    if (messageInfo != null) {
+                        objmap.putMap("message", MessageEventListener.messageAnalysis(messageInfo));
+                    }
+                    objmap.putString("peer", peer);
+                    objmap.putInt("type", type.value());
+                    objmap.putString("groupName", groupName);
+
+                    array.pushMap(objmap);
+                }
+            }
+            map.putInt("code", 0);
+            map.putString("msg", "");
+            map.putArray("data", array);
+            sendEvent(IMEventNameConstant.CONVERSATION_LIST_STATUS, map);
+        } catch (Exception e) {
+            map.putInt("code", -1);
+            map.putString("msg", e.getMessage());
+            sendEvent(IMEventNameConstant.CONVERSATION_LIST_STATUS, map);
+        }
+    }
+
+    @ReactMethod
+    public void readMessage() {
+        if (this.conversation == null) {
+            return;
+        }
+        TIMMessage msg = conversation.getLastMsg();
+        this.conversation.setReadMessage(msg, new TIMCallBack() {
+            @Override
+            public void onError(int code, String desc) {
+                Log.e(getName(), "设置已读消息 失败, code: " + code + "|desc: " + desc);
+            }
+
+            @Override
+            public void onSuccess() {
+                Log.d(getName(), "setReadMessage succ");
+            }
+        });
+    }
 
     @ReactMethod
     public void getConversation(int type, String peer) {

@@ -1,6 +1,10 @@
 package cn.kurisu.txim.listener;
 
+import cn.kurisu.txim.constants.IMEventNameConstant;
 import cn.kurisu.txim.module.BaseModule;
+
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.WritableMap;
 import com.tencent.imsdk.TIMConversation;
 import com.tencent.imsdk.TIMRefreshListener;
 import com.tencent.imsdk.log.QLog;
@@ -14,7 +18,8 @@ public class RefreshListener extends BaseListener implements TIMRefreshListener 
 
     @Override
     public void onRefresh() {
-
+        WritableMap map = Arguments.createMap();
+        module.sendEvent(IMEventNameConstant.ON_CONVERSATION_REFRESH, map);
     }
 
     /**

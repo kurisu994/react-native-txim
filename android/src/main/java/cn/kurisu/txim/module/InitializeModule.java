@@ -334,6 +334,8 @@ public class InitializeModule extends BaseModule {
         constants.put("onNewMessage", IMEventNameConstant.ON_NEW_MESSAGE);
         constants.put("sendStatus", IMEventNameConstant.SEND_STATUS);
         constants.put("conversationStatus", IMEventNameConstant.CONVERSATION_STATUS);
+        constants.put("conversationListStatus", IMEventNameConstant.CONVERSATION_LIST_STATUS);
+         constants.put("onConversationRefresh", IMEventNameConstant.ON_CONVERSATION_REFRESH);
 
         //消息类型
         constants.put("Text", MessageInfo.MSG_TYPE_TEXT);

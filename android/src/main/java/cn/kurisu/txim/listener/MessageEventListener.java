@@ -29,18 +29,14 @@ public class MessageEventListener extends BaseListener implements TIMMessageList
     public boolean onNewMessages(List<TIMMessage> msgs) {
         List<MessageInfo> messageInfos = MessageInfoUtil.TIMMessages2MessageInfos(msgs, false);
         MessageInfo info = messageInfos.get(0);
-        if (info.getNickName() != null) {
-            QLog.i("收到消息", "recv onNewMessages, size " + (msgs != null ? msgs.size() : 0));
-            WritableArray writableArray = messageAnalysis(messageInfos);
-            module.sendEvent(IMEventNameConstant.ON_NEW_MESSAGE, writableArray);
-            int type = info.getMsgType();
-            if (MessageInfo.MSG_TYPE_CUSTOM == type) {
-                PushUtil.getInstance().PushNotify(info.getData(), info.getDesc());
-            } else {
-                PushUtil.getInstance().PushNotify(info.getNickName(), info.getExtra() == null ? "" : info.getExtra().toString());
-            }
+        QLog.i("收到消息", "recv onNewMessages, size " + (msgs != null ? msgs.size() : 0));
+        WritableArray writableArray = messageAnalysis(messageInfos);
+        module.sendEvent(IMEventNameConstant.ON_NEW_MESSAGE, writableArray);
+        int type = info.getMsgType();
+        if (MessageInfo.MSG_TYPE_CUSTOM == type) {
+            PushUtil.getInstance().PushNotify(info.getData(), info.getDesc());
         } else {
-            this.onNewMessages(msgs);
+            PushUtil.getInstance().PushNotify(info.getNickName(), info.getExtra() == null ? "" : info.getExtra().toString());
         }
         return true;
     }

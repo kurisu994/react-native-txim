@@ -12,8 +12,14 @@ export class IMInitModule {
 export class IMChatModule {
   /**添加消息接收监听器*/
   static addMessageReceiveListener: (listener: (messages: IMMessage[]) => void, context?: any) => EmitterSubscription;
+  /**消息列表发生改变时的监听 */
+  static addConversationRefreshListener: (listener: () => void, context?: any) => EmitterSubscription;
   /**获取会话*/
   static getConversation: (type: ConversationType, peer: string) => Promise<boolean>;
+  /**获取会话列表 */
+  static getConversationList: () => Promise<IMConversationList>;
+  /**设置消息已读 */
+  static readMessage: () => any
   /**销毁会话*/
   static destroyConversation: () => Promise<boolean>;
   /**发送文本消息*/
@@ -52,6 +58,25 @@ export interface IMResponse {
   code: number,
   /**描述*/
   msg: string
+}
+
+/**IM会话列表响应 */
+export interface IMConversationList extends IMResponse {
+  data: ConversationItem[]
+}
+
+/**会话信息 */
+export interface ConversationItem {
+  /**聊天对象账号 */
+  peer: string,
+  /**最后一条信息 */
+  message?: IMMessage,
+  /**会话类型 */
+  type: ConversationType,
+  /**群名 */
+  groupName: string,
+  /**未读数 */
+  unread: number
 }
 
 export interface IMMessage {

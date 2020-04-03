@@ -29,4 +29,14 @@ public class IMEventNameConstant {
      * 获取会话
      */
     public final static String CONVERSATION_STATUS = "conversationStatus";
+
+     /**
+     * 获取会话列表事件
+     */
+    public final static String CONVERSATION_LIST_STATUS = "conversationListStatus";
+
+     /**
+     * 会话列表刷新
+     */
+    public final static String ON_CONVERSATION_REFRESH = "onConversationRefresh";
 }

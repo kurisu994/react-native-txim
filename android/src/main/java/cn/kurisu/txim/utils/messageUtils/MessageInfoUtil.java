@@ -273,6 +273,7 @@ public class MessageInfoUtil {
         msgInfo.setTIMMessage(timMessage);
         msgInfo.setGroup(isGroup);
         msgInfo.setMsgId(timMessage.getMsgId());
+        msgInfo.setNickName(timMessage.getSenderNickname());
 
         if (isGroup) {
             TIMGroupMemberInfo memberInfo = timMessage.getSenderGroupMemberProfile();
@@ -291,7 +292,6 @@ public class MessageInfoUtil {
                 @Override
                 public void onSuccess(TIMUserProfile timUserProfile) {
                     msgInfo.setAvatar(timUserProfile.getFaceUrl());
-                    msgInfo.setNickName(timUserProfile.getNickName() == null ? "" : timUserProfile.getNickName());
                 }
             });
             msgInfo.setFromUser(sender);
