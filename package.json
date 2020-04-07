@@ -1,6 +1,6 @@
 {
   "name": "react-native-txim",
-  "version": "0.4.0-alpha.1",
+  "version": "0.4.0-alpha.2",
   "description": "腾讯IM的RN集成 alpha版",
   "main": "index.js",
   "directories": {

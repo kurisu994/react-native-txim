@@ -1,5 +1,7 @@
 package cn.kurisu.txim.listener;
 
+
+
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
@@ -10,13 +12,19 @@ import cn.kurisu.txim.utils.PushUtil;
 import cn.kurisu.txim.utils.messageUtils.MessageInfo;
 import cn.kurisu.txim.utils.messageUtils.MessageInfoUtil;
 
+import com.tencent.imsdk.TIMFriendshipManager;
 import com.tencent.imsdk.TIMMessage;
 import com.tencent.imsdk.TIMMessageListener;
+import com.tencent.imsdk.TIMUserProfile;
+import com.tencent.imsdk.TIMValueCallBack;
 import com.tencent.imsdk.log.QLog;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MessageEventListener extends BaseListener implements TIMMessageListener {
+    private static TIMFriendshipManager instance = TIMFriendshipManager.getInstance();
+
     public MessageEventListener(BaseModule module) {
         super(module);
     }
@@ -49,17 +57,14 @@ public class MessageEventListener extends BaseListener implements TIMMessageList
 
     public static WritableArray messageAnalysis(List<MessageInfo> list) {
         WritableArray array = Arguments.createArray();
-
         for (MessageInfo info : list) {
             WritableMap map = messageAnalysis(info);
             array.pushMap(map);
         }
-
         return array;
     }
 
     public static WritableMap messageAnalysis(MessageInfo info) {
-        System.out.println(info);
         WritableMap map = Arguments.createMap();
         map.putString("sender", info.getFromUser());
         map.putString("peer", info.getPeer());
@@ -75,8 +80,30 @@ public class MessageEventListener extends BaseListener implements TIMMessageList
         map.putInt("msgType", info.getMsgType());
         map.putInt("imgWithd", info.getImgHeight());
         map.putInt("imgHeight", info.getImgWithd());
-        map.putString("nickName", info.getNickName());
-        map.putString("senderAvatar", info.getAvatar());
+        if (info.getNickName() == null) {
+            TIMUserProfile userProfile = instance.queryUserProfile(info.getPeer());
+            if (userProfile != null) {
+                map.putString("nickName", userProfile.getNickName());
+                map.putString("senderAvatar", userProfile.getFaceUrl());
+            } else {
+                map.putString("nickName", info.getPeer());
+                List<String> list = new ArrayList<>();
+                list.add(info.getPeer());
+                instance.getUsersProfile(list, true, new TIMValueCallBack<List<TIMUserProfile>>() {
+                    @Override
+                    public void onError(int i, String s) {
+                        //错误码 code 和错误描述 desc，可用于定位请求失败原因
+                        //错误码 code 列表请参见错误码表
+                        QLog.e("MessageEventListener", "getUsersProfile failed: " + i + " desc：" + s);
+                    }
+
+                    @Override
+                    public void onSuccess(List<TIMUserProfile> timUserProfiles) {
+                        QLog.e("MessageEventListener", "getUsersProfile succ");
+                    }
+                });
+            }
+        }
         map.putString("data", info.getData());
         map.putDouble("lat", info.getLat());
         map.putDouble("lng", info.getLng());

@@ -210,9 +210,9 @@ public class InitializeModule extends BaseModule {
             TIMManager.getInstance().addMessageListener(new MessageEventListener(this));
             userConfig.setMessageRevokedListener(new MessageRevokedListener(this));
             userConfig.disableAutoReport(false);
+            //开启消息已读回执
             userConfig.enableReadReceipt(true);
-            userConfig.disableStorage();
-            
+
             TIMManager.getInstance().setUserConfig(userConfig);
         }
     }
@@ -335,7 +335,8 @@ public class InitializeModule extends BaseModule {
         constants.put("sendStatus", IMEventNameConstant.SEND_STATUS);
         constants.put("conversationStatus", IMEventNameConstant.CONVERSATION_STATUS);
         constants.put("conversationListStatus", IMEventNameConstant.CONVERSATION_LIST_STATUS);
-         constants.put("onConversationRefresh", IMEventNameConstant.ON_CONVERSATION_REFRESH);
+        constants.put("onConversationRefresh", IMEventNameConstant.ON_CONVERSATION_REFRESH);
+        constants.put("onMessageQuery", IMEventNameConstant.ON_MESSAGE_QUERY);
 
         //消息类型
         constants.put("Text", MessageInfo.MSG_TYPE_TEXT);

@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import cn.kurisu.txim.constants.Constants;
 import cn.kurisu.txim.utils.FileUtil;
 import cn.kurisu.txim.utils.ImageUtil;
+
 import com.tencent.imsdk.TIMCallBack;
 import com.tencent.imsdk.TIMCustomElem;
 import com.tencent.imsdk.TIMElem;
@@ -274,7 +275,6 @@ public class MessageInfoUtil {
         msgInfo.setGroup(isGroup);
         msgInfo.setMsgId(timMessage.getMsgId());
         msgInfo.setNickName(timMessage.getSenderNickname());
-
         if (isGroup) {
             TIMGroupMemberInfo memberInfo = timMessage.getSenderGroupMemberProfile();
             if (memberInfo != null && !TextUtils.isEmpty(memberInfo.getNameCard()))
@@ -282,23 +282,12 @@ public class MessageInfoUtil {
             else
                 msgInfo.setFromUser(sender);
         } else {
-            timMessage.getSenderProfile(new TIMValueCallBack<TIMUserProfile>() {
-                @Override
-                public void onError(int i, String s) {
-                    QLog.e("获取发送人资料", i + "");
-                    QLog.e("获取发送人资料", s);
-                }
-
-                @Override
-                public void onSuccess(TIMUserProfile timUserProfile) {
-                    msgInfo.setAvatar(timUserProfile.getFaceUrl());
-                }
-            });
             msgInfo.setFromUser(sender);
         }
         msgInfo.setMsgTime(timMessage.timestamp() * 1000);
         msgInfo.setPeer(timMessage.getConversation().getPeer());
         msgInfo.setSelf(sender.equals(TIMManager.getInstance().getLoginUser()));
+
         if (timMessage.getElementCount() > 0) {
             TIMElem ele = timMessage.getElement(0);
 
@@ -415,19 +404,12 @@ public class MessageInfoUtil {
                 } else if (type == TIMElemType.Image) {
                     TIMImageElem imageEle = (TIMImageElem) ele;
                     String localPath = imageEle.getPath();
-                    if (msgInfo.isSelf() && !TextUtils.isEmpty(localPath)) {
-                        msgInfo.setDataPath(localPath);
-                        int size[] = ImageUtil.getImageSize(localPath);
-                        msgInfo.setImgWithd(size[0]);
-                        msgInfo.setImgHeight(size[1]);
-                    }
                     //本地路径为空，可能为更换手机或者是接收的消息
-                    else {
-                        List<TIMImage> imgs = imageEle.getImageList();
-                        for (int i = 0; i < imgs.size(); i++) {
-                            TIMImage img = imgs.get(i);
-                            if (img.getType() == TIMImageType.Thumb) {
-                                //TODO 处理缩略图等情况
+                    List<TIMImage> imgs = imageEle.getImageList();
+                    for (TIMImage img : imgs) {
+                        if (img.getType() == TIMImageType.Thumb) {
+                            //TODO 处理缩略图等情况
+
 //                                final String path = Constants.IMAGE_DOWNLOAD_DIR + img.getUuid();
 //                                msgInfo.setImgWithd((int) img.getWidth());
 //                                msgInfo.setImgHeight((int) img.getHeight());
@@ -435,11 +417,17 @@ public class MessageInfoUtil {
 //                                if (file.exists()) {
 //                                    msgInfo.setDataPath(path);
 //                                }
-                            }
-                            if (img.getType() == TIMImageType.Original) {
-                                msgInfo.setDataPath(img.getUrl());
-                            }
                         }
+                        if (img.getType() == TIMImageType.Original) {
+                            msgInfo.setDataPath(img.getUrl());
+                        }
+                    }
+
+                    if (msgInfo.isSelf() && !TextUtils.isEmpty(localPath)) {
+                        msgInfo.setDataUri(FileUtil.getUriFromPath(localPath));
+                        int size[] = ImageUtil.getImageSize(localPath);
+                        msgInfo.setImgWithd(size[0]);
+                        msgInfo.setImgHeight(size[1]);
                     }
 
                     msgInfo.setExtra("[图片]");

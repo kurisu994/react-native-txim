@@ -16,10 +16,12 @@ export class IMChatModule {
   static addConversationRefreshListener: (listener: () => void, context?: any) => EmitterSubscription;
   /**获取会话*/
   static getConversation: (type: ConversationType, peer: string) => Promise<boolean>;
-  /**获取会话列表 */
-  static getConversationList: () => Promise<IMConversationList>;
   /**设置消息已读 */
   static readMessage: () => any
+  /**获取会话列表 */
+  static getConversationList: () => Promise<IMConversationList>;
+  /**获取消息列表 */
+  static getMessage: (pageSize: number, type: ConversationType) => Promise<IMMessageList>;
   /**销毁会话*/
   static destroyConversation: () => Promise<boolean>;
   /**发送文本消息*/
@@ -79,6 +81,11 @@ export interface ConversationItem {
   unread: number
 }
 
+/**消息列表 */
+export interface IMMessageList extends IMResponse {
+  data: IMMessage[]
+}
+
 export interface IMMessage {
   /**发送方*/
   sender: string,
@@ -98,7 +105,7 @@ export interface IMMessage {
   group: boolean,
   /**图片或者语音或者视频等的路径*/
   dataPath: string,
-  /**图片或者语音或者视频等的uri路径 自己发送的消息path就是是这个*/
+  /**图片或者语音或者视频等的uri路径*/
   dataUri: string,
   /**消息时间*/
   msgTime: string,

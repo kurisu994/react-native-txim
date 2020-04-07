@@ -11,6 +11,8 @@ import cn.kurisu.txim.constants.IMEventNameConstant;
 import cn.kurisu.txim.listener.MessageEventListener;
 import cn.kurisu.txim.utils.messageUtils.MessageInfo;
 import cn.kurisu.txim.utils.messageUtils.MessageInfoUtil;
+
+import com.tencent.imsdk.TIMCallBack;
 import com.tencent.imsdk.TIMConversation;
 import com.tencent.imsdk.TIMConversationType;
 import com.tencent.imsdk.TIMManager;
@@ -29,6 +31,7 @@ import javax.annotation.Nullable;
  */
 public class MessageModule extends BaseModule {
     TIMConversation conversation;
+    TIMMessage lastMsg = null;
 
     public MessageModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -88,15 +91,49 @@ public class MessageModule extends BaseModule {
         this.conversation.setReadMessage(msg, new TIMCallBack() {
             @Override
             public void onError(int code, String desc) {
-                Log.e(getName(), "设置已读消息 失败, code: " + code + "|desc: " + desc);
+                QLog.e(getName(), "设置已读消息 失败, code: " + code + "|desc: " + desc);
             }
 
             @Override
             public void onSuccess() {
-                Log.d(getName(), "setReadMessage succ");
+                QLog.d(getName(), "setReadMessage succ");
             }
         });
     }
+
+    @ReactMethod
+    public void getMessage(int pageSize, int type) {
+        final WritableMap map = Arguments.createMap();
+        if (conversation == null) {
+            map.putInt("code", -1);
+            map.putString("msg", "会话获取失败");
+            sendEvent(IMEventNameConstant.ON_MESSAGE_QUERY, map);
+            return;
+        }
+
+        if (TIMConversationType.C2C.value() == type) { //TODO 群消息拉取
+            conversation.getMessage(pageSize, lastMsg, new TIMValueCallBack<List<TIMMessage>>() {
+                @Override
+                public void onError(int i, String s) {
+                    map.putInt("code", i);
+                    map.putString("msg", s);
+                    sendEvent(IMEventNameConstant.ON_MESSAGE_QUERY, map);
+                }
+
+                @Override
+                public void onSuccess(List<TIMMessage> timMessages) {
+                    lastMsg = timMessages.get(0);
+                    List<MessageInfo> infoList = MessageInfoUtil.TIMMessages2MessageInfos(timMessages, false);
+                    WritableArray writableArray = MessageEventListener.messageAnalysis(infoList);
+                    map.putInt("code", 0);
+                    map.putString("msg", "");
+                    map.putArray("data", writableArray);
+                    sendEvent(IMEventNameConstant.ON_MESSAGE_QUERY, map);
+                }
+            });
+        }
+    }
+
 
     @ReactMethod
     public void getConversation(int type, String peer) {
@@ -134,6 +171,7 @@ public class MessageModule extends BaseModule {
                 sendEvent(IMEventNameConstant.SEND_STATUS, map);
                 return;
             }
+
             conversation.sendMessage(info.getTIMMessage(), new TIMValueCallBack<TIMMessage>() {//发送消息回调
                 @Override
                 public void onError(int code, String desc) {//发送消息失败
@@ -147,11 +185,15 @@ public class MessageModule extends BaseModule {
                 @Override
                 public void onSuccess(TIMMessage msg) {//发送消息成功
                     QLog.i("发送消息", "SendMsg ok");
+                    WritableArray array = Arguments.createArray();
+                    MessageInfo messageInfo = MessageInfoUtil.TIMMessage2MessageInfo(msg, info.isGroup());
                     map.putInt("code", 0);
                     map.putString("msg", "SendMsg ok");
                     sendEvent(IMEventNameConstant.SEND_STATUS, map);
-                    WritableArray array = Arguments.createArray();
-                    array.pushMap(MessageEventListener.messageAnalysis(info));
+                    if (messageInfo == null) {
+                        return;
+                    }
+                    array.pushMap(MessageEventListener.messageAnalysis(messageInfo));
                     sendEvent(IMEventNameConstant.ON_NEW_MESSAGE, array);
                 }
             });
@@ -165,6 +207,7 @@ public class MessageModule extends BaseModule {
      */
     @ReactMethod
     public void destroyConversation() {
+        this.lastMsg = null;
         if (conversation != null) {
             this.conversation = null;
         }
@@ -183,7 +226,7 @@ public class MessageModule extends BaseModule {
                 break;
             case MessageInfo.MSG_TYPE_IMAGE:
                 Uri uri = Uri.fromFile(new File(content));
-                messageInfo = MessageInfoUtil.buildImageMessage(uri, compressed, false);
+                messageInfo = MessageInfoUtil.buildImageMessage(uri, compressed, compressed);
                 break;
             case MessageInfo.MSG_TYPE_AUDIO:
                 messageInfo = MessageInfoUtil.buildAudioMessage(content, duration);
