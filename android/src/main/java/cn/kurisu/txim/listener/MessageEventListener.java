@@ -80,7 +80,9 @@ public class MessageEventListener extends BaseListener implements TIMMessageList
         map.putInt("msgType", info.getMsgType());
         map.putInt("imgWithd", info.getImgHeight());
         map.putInt("imgHeight", info.getImgWithd());
-        if (info.getNickName() == null) {
+        map.putString("nickName", info.getNickName());
+        map.putString("senderAvatar", info.getAvatar());
+        if (info.getNickName() == null || info.getNickName().length() <= 0) {
             TIMUserProfile userProfile = instance.queryUserProfile(info.getPeer());
             if (userProfile != null) {
                 map.putString("nickName", userProfile.getNickName());

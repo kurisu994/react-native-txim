@@ -122,7 +122,9 @@ public class MessageModule extends BaseModule {
 
                 @Override
                 public void onSuccess(List<TIMMessage> timMessages) {
-                    lastMsg = timMessages.get(0);
+                    if (timMessages != null && timMessages.size() > 0) {
+                        lastMsg = timMessages.get(timMessages.size() - 1);
+                    }
                     List<MessageInfo> infoList = MessageInfoUtil.TIMMessages2MessageInfos(timMessages, false);
                     WritableArray writableArray = MessageEventListener.messageAnalysis(infoList);
                     map.putInt("code", 0);
