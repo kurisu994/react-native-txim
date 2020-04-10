@@ -7,6 +7,7 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
+
 import cn.kurisu.txim.constants.IMEventNameConstant;
 import cn.kurisu.txim.listener.MessageEventListener;
 import cn.kurisu.txim.utils.messageUtils.MessageInfo;
@@ -17,6 +18,7 @@ import com.tencent.imsdk.TIMConversation;
 import com.tencent.imsdk.TIMConversationType;
 import com.tencent.imsdk.TIMManager;
 import com.tencent.imsdk.TIMMessage;
+import com.tencent.imsdk.TIMUserProfile;
 import com.tencent.imsdk.TIMValueCallBack;
 import com.tencent.imsdk.log.QLog;
 
@@ -58,7 +60,6 @@ public class MessageModule extends BaseModule {
                     //解析消息
                     MessageInfo messageInfo = MessageInfoUtil.TIMMessage2MessageInfo(lastMsg, TIMConversationType.Group.equals(type));
                     String peer = timConversation.getPeer();
-                    String groupName = timConversation.getGroupName();
 
                     objmap.putString("unread", String.valueOf(unreadNum));
                     if (messageInfo != null) {
@@ -66,7 +67,13 @@ public class MessageModule extends BaseModule {
                     }
                     objmap.putString("peer", peer);
                     objmap.putInt("type", type.value());
-                    objmap.putString("groupName", groupName);
+                    if (TIMConversationType.Group.equals(type)) {
+                        String groupName = timConversation.getGroupName();
+                        objmap.putString("name", groupName);
+                    } else {
+                        TIMUserProfile userProfile = MessageEventListener.queryProfile(peer);
+                        objmap.putString("name", userProfile.getNickName());
+                    }
 
                     array.pushMap(objmap);
                 }

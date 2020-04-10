@@ -1,7 +1,6 @@
 package cn.kurisu.txim.listener;
 
 
-
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
@@ -23,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MessageEventListener extends BaseListener implements TIMMessageListener {
-    private static TIMFriendshipManager instance = TIMFriendshipManager.getInstance();
+    private static TIMFriendshipManager instance;
 
     public MessageEventListener(BaseModule module) {
         super(module);
@@ -81,36 +80,44 @@ public class MessageEventListener extends BaseListener implements TIMMessageList
         map.putInt("imgWithd", info.getImgHeight());
         map.putInt("imgHeight", info.getImgWithd());
         map.putString("nickName", info.getNickName());
-        map.putString("senderAvatar", info.getAvatar());
-        if (info.getNickName() == null || info.getNickName().length() <= 0) {
-            TIMUserProfile userProfile = instance.queryUserProfile(info.getPeer());
-            if (userProfile != null) {
-                map.putString("nickName", userProfile.getNickName());
-                map.putString("senderAvatar", userProfile.getFaceUrl());
-            } else {
-                map.putString("nickName", info.getPeer());
-                List<String> list = new ArrayList<>();
-                list.add(info.getPeer());
-                instance.getUsersProfile(list, true, new TIMValueCallBack<List<TIMUserProfile>>() {
-                    @Override
-                    public void onError(int i, String s) {
-                        //错误码 code 和错误描述 desc，可用于定位请求失败原因
-                        //错误码 code 列表请参见错误码表
-                        QLog.e("MessageEventListener", "getUsersProfile failed: " + i + " desc：" + s);
-                    }
-
-                    @Override
-                    public void onSuccess(List<TIMUserProfile> timUserProfiles) {
-                        QLog.e("MessageEventListener", "getUsersProfile succ");
-                    }
-                });
-            }
-        }
+        TIMUserProfile userProfile = queryProfile(info.getFromUser());
+        map.putString("senderAvatar", userProfile.getFaceUrl());
         map.putString("data", info.getData());
         map.putDouble("lat", info.getLat());
         map.putDouble("lng", info.getLng());
         map.putString("desc", info.getDesc());
         return map;
+    }
+
+    /**
+     * 同步资料
+     *
+     * @param id
+     */
+    public static TIMUserProfile queryProfile(String id) {
+        if (instance == null) {
+            instance = TIMFriendshipManager.getInstance();
+        }
+        TIMUserProfile userProfile = instance.queryUserProfile(id);
+        if (userProfile != null) {
+            return userProfile;
+        }
+        List<String> list = new ArrayList<>();
+        list.add(id);
+        instance.getUsersProfile(list, true, new TIMValueCallBack<List<TIMUserProfile>>() {
+            @Override
+            public void onError(int i, String s) {
+                //错误码 code 和错误描述 desc，可用于定位请求失败原因
+                //错误码 code 列表请参见错误码表
+                QLog.e("MessageEventListener", "getUsersProfile failed: " + i + " desc：" + s);
+            }
+
+            @Override
+            public void onSuccess(List<TIMUserProfile> timUserProfiles) {
+                QLog.e("MessageEventListener", "getUsersProfile succ");
+            }
+        });
+        return new TIMUserProfile();
     }
 
 }

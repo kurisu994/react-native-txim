@@ -75,8 +75,8 @@ export interface ConversationItem {
   message?: IMMessage,
   /**会话类型 */
   type: ConversationType,
-  /**群名 */
-  groupName: string,
+  /**会话名称 */
+  name: string,
   /**未读数 */
   unread: number
 }
