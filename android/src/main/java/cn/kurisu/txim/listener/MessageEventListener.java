@@ -41,8 +41,10 @@ public class MessageEventListener extends BaseListener implements TIMMessageList
         module.sendEvent(IMEventNameConstant.ON_NEW_MESSAGE, writableArray);
         int type = info.getMsgType();
         String data = info.getData() == null ? "" : info.getData();
-        if (MessageInfo.MSG_TYPE_CUSTOM == type && data.trim().length() > 0) {
-            PushUtil.getInstance().PushNotify(data, info.getDesc());
+        if (MessageInfo.MSG_TYPE_CUSTOM == type) {
+            if (data.trim().length() > 0) {
+                PushUtil.getInstance().PushNotify(data, info.getDesc());
+            }
         } else {
             PushUtil.getInstance().PushNotify(info.getNickName(), info.getExtra() == null ? "" : info.getExtra().toString());
         }
