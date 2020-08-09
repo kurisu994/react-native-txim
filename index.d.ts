@@ -86,6 +86,7 @@ export interface IMMessageList extends IMResponse {
   data: IMMessage[]
 }
 
+/**接收到的消息*/
 export interface IMMessage {
   /**发送方*/
   sender: string,
