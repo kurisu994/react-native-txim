@@ -13,7 +13,6 @@ import android.util.Log;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
-import cn.kurisu.txim.IMApplication;
 import cn.kurisu.txim.R;
 
 /**

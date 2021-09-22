@@ -1,7 +1,6 @@
 package cn.kurisu.txim.utils;
 
 import android.content.ContentResolver;
-import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,8 +9,6 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.provider.MediaStore;
 
-
-import cn.kurisu.txim.IMApplication;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

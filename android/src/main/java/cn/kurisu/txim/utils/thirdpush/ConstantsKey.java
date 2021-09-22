@@ -39,6 +39,8 @@ public class ConstantsKey {
     /****** vivo离线推送参数end ******/
 
     /****** oppo ******/
-    // oppo的离线推送也是支持的，但是oppo要求app要发布到应用市场才能集成他们的离线推送，由于此Demo还没有发布，暂时没集成oppo
-    /****** oppo离线推送参数start ******/
+    public static long OPPO_PUSH_BUZID = 0L;
+
+    /****** google ******/
+    public static long GOOGLE_FCM_PUSH_BUZID = 0L;
 }

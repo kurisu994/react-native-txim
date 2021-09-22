@@ -1,4 +1,4 @@
-package cn.kurisu.txim.business.config;
+package cn.kurisu.txim.business.manager;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -13,26 +13,30 @@ import android.util.LruCache;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import cn.kurisu.txim.R;
-import cn.kurisu.txim.business.InitializeBusiness;
-import cn.kurisu.txim.utils.UIUtils;
-
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import cn.kurisu.txim.R;
+import cn.kurisu.txim.configs.CustomFaceConfig;
+import cn.kurisu.txim.configs.CustomFace;
+import cn.kurisu.txim.configs.CustomFaceGroup;
+import cn.kurisu.txim.utils.ScreenUtil;
+import cn.kurisu.txim.utils.TIMInitUtil;
 
 
 public class FaceManager {
 
+    private static final int drawableWidth = ScreenUtil.getPxByDp(32);
     private static ArrayList<Emoji> emojiList = new ArrayList<>();
     private static LruCache<String, Bitmap> drawableCache = new LruCache(1024);
-    private static Context context = InitializeBusiness.getAppContext();
-    private static String[] emojiFilters = context.getResources().getStringArray(R.array.emoji_filter);
-    private static final int drawableWidth = UIUtils.getPxByDp(32);
+    private static Context context = TIMInitUtil.getAppContext();
+    private static String[] emojiFilters = context.getResources().getStringArray(R.array.emoji_filter_key);
+    private static String[] emojiFilters_values = context.getResources().getStringArray(R.array.emoji_filter_value);
     private static ArrayList<FaceGroup> customFace = new ArrayList<>();
 
     public static ArrayList<Emoji> getEmojiList() {
@@ -61,6 +65,14 @@ public class FaceManager {
         return null;
     }
 
+    public static String[] getEmojiFiltersValues(){
+        return emojiFilters_values;
+    }
+
+    public static String[] getEmojiFilters(){
+        return emojiFilters;
+    }
+
     public static void loadFaceFiles() {
         new Thread() {
             @Override
@@ -68,11 +80,16 @@ public class FaceManager {
                 for (int i = 0; i < emojiFilters.length; i++) {
                     loadAssetBitmap(emojiFilters[i], "emoji/" + emojiFilters[i] + "@2x.png", true);
                 }
-                ArrayList<CustomFaceGroupConfigs> faceConfigs = InitializeBusiness.getBaseConfigs().getFaceConfigs();
-                if (faceConfigs == null)
+                CustomFaceConfig config = TIMInitUtil.getConfigs().getCustomFaceConfig();
+                if (config == null) {
                     return;
-                for (int i = 0; i < faceConfigs.size(); i++) {
-                    CustomFaceGroupConfigs groupConfigs = faceConfigs.get(i);
+                }
+                List<CustomFaceGroup> groups = config.getFaceGroups();
+                if (groups == null) {
+                    return;
+                }
+                for (int i = 0; i < groups.size(); i++) {
+                    CustomFaceGroup groupConfigs = groups.get(i);
                     FaceGroup groupInfo = new FaceGroup();
                     groupInfo.setGroupId(groupConfigs.getFaceGroupId());
                     groupInfo.setDesc(groupConfigs.getFaceIconName());
@@ -80,14 +97,13 @@ public class FaceManager {
                     groupInfo.setPageRowCount(groupConfigs.getPageRowCount());
                     groupInfo.setGroupIcon(loadAssetBitmap(groupConfigs.getFaceIconName(), groupConfigs.getFaceIconPath(), false).getIcon());
 
-
-                    ArrayList<FaceConfig> faceArray = groupConfigs.getFaceConfigs();
+                    ArrayList<CustomFace> customFaceArray = groupConfigs.getCustomFaceList();
                     ArrayList<Emoji> faceList = new ArrayList<>();
-                    for (int j = 0; j < faceArray.size(); j++) {
-                        FaceConfig config = faceArray.get(j);
-                        Emoji emoji = loadAssetBitmap(config.getFaceName(), config.getAssetPath(), false);
-                        emoji.setWidth(config.getFaceWidth());
-                        emoji.setHeight(config.getFaceHeight());
+                    for (int j = 0; j < customFaceArray.size(); j++) {
+                        CustomFace face = customFaceArray.get(j);
+                        Emoji emoji = loadAssetBitmap(face.getFaceName(), face.getAssetPath(), false);
+                        emoji.setWidth(face.getFaceWidth());
+                        emoji.setHeight(face.getFaceHeight());
                         faceList.add(emoji);
 
                     }
@@ -118,8 +134,9 @@ public class FaceManager {
 
                 emoji.setIcon(bitmap);
                 emoji.setFilter(filter);
-                if (isEmoji)
+                if (isEmoji) {
                     emojiList.add(emoji);
+                }
 
             }
             return emoji;
@@ -179,30 +196,33 @@ public class FaceManager {
     }
 
 
-    public static void handlerEmojiText(TextView comment, String content) {
+    public static void handlerEmojiText(TextView comment, String content, boolean typing) {
         SpannableStringBuilder sb = new SpannableStringBuilder(content);
         String regex = "\\[(\\S+?)\\]";
         Pattern p = Pattern.compile(regex);
         Matcher m = p.matcher(content);
-        Iterator<Emoji> iterator;
-        Emoji emoji = null;
+        boolean imageFound = false;
         while (m.find()) {
-            iterator = emojiList.iterator();
-            String tempText = m.group();
-            while (iterator.hasNext()) {
-                emoji = iterator.next();
-                if (tempText.equals(emoji.getFilter())) {
-                    //转换为Span并设置Span的大小
-                    sb.setSpan(new ImageSpan(context, drawableCache.get(tempText)),
-                            m.start(), m.end(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
-                    break;
-                }
+            String emojiName = m.group();
+            Bitmap bitmap = drawableCache.get(emojiName);
+            if (bitmap != null) {
+                imageFound = true;
+                sb.setSpan(new ImageSpan(context, bitmap),
+                        m.start(), m.end(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
             }
+        }
+        // 如果没有发现表情图片，并且当前是输入状态，不再重设输入框
+        if (!imageFound && typing) {
+            return;
         }
         int selection = comment.getSelectionStart();
         comment.setText(sb);
         if (comment instanceof EditText) {
             ((EditText) comment).setSelection(selection);
         }
+    }
+
+    public static Bitmap getEmoji(String name) {
+        return drawableCache.get(name);
     }
 }

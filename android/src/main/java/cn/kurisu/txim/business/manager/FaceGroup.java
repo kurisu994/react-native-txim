@@ -1,4 +1,4 @@
-package cn.kurisu.txim.business.config;
+package cn.kurisu.txim.business.manager;
 
 import android.graphics.Bitmap;
 

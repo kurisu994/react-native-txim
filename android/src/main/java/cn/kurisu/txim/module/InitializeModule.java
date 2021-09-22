@@ -1,22 +1,27 @@
 package cn.kurisu.txim.module;
 
+import android.app.Activity;
 import android.app.Application;
-import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.os.Environment;
 import android.widget.Toast;
+
+import androidx.multidex.MultiDex;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
-import cn.kurisu.huawei.android.hms.agent.HMSAgent;
-import cn.kurisu.huawei.android.hms.agent.common.handler.ConnectHandler;
-import cn.kurisu.huawei.android.hms.agent.push.handler.GetTokenHandler;
-import cn.kurisu.txim.IMApplication;
+
+import cn.kurisu.txim.pojo.ResultVO;
+import cn.kurisu.txim.business.conversation.ConversationManagerKit;
+import cn.kurisu.txim.configs.GeneralConfig;
+import cn.kurisu.txim.configs.TIMConfigs;
 import cn.kurisu.txim.constants.IMEventNameConstant;
-import cn.kurisu.txim.R;
 import cn.kurisu.txim.business.config.BaseConfigs;
 import cn.kurisu.txim.business.InitializeBusiness;
 import cn.kurisu.txim.business.config.CustomFaceGroupConfigs;
@@ -27,23 +32,28 @@ import cn.kurisu.txim.listener.MessageEventListener;
 import cn.kurisu.txim.listener.MessageRevokedListener;
 import cn.kurisu.txim.listener.RefreshListener;
 import cn.kurisu.txim.listener.UserStatusListener;
+import cn.kurisu.txim.utils.BrandUtil;
+import cn.kurisu.txim.utils.TIMInitUtil;
+import cn.kurisu.txim.utils.TIMLog;
 import cn.kurisu.txim.utils.messageUtils.MessageInfo;
 import cn.kurisu.txim.utils.thirdpush.ConstantsKey;
 import cn.kurisu.txim.utils.thirdpush.ThirdPushTokenMgr;
+
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+import com.heytap.msp.push.HeytapPushManager;
+import com.huawei.hms.push.HmsMessaging;
 import com.meizu.cloud.pushsdk.PushManager;
 import com.meizu.cloud.pushsdk.util.MzSystemUtils;
-import com.tencent.imsdk.TIMCallBack;
-import com.tencent.imsdk.TIMManager;
-import com.tencent.imsdk.TIMOfflinePushSettings;
-import com.tencent.imsdk.TIMUserConfig;
-import com.tencent.imsdk.log.QLog;
-import com.tencent.imsdk.session.SessionWrapper;
-import com.tencent.imsdk.utils.IMFunc;
-import com.vivo.push.IPushActionListener;
+import com.tencent.imsdk.v2.V2TIMCallback;
+import com.tencent.imsdk.v2.V2TIMManager;
+import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.imsdk.v2.V2TIMSDKConfig;
 import com.vivo.push.PushClient;
 import com.xiaomi.mipush.sdk.MiPushClient;
 
-import java.util.ArrayList;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,7 +66,9 @@ import javax.annotation.Nonnull;
 
 public class InitializeModule extends BaseModule {
 
-    private Context context;
+    private static final String TAG = "InitializeModule";
+
+    private final ReactApplicationContext context;
 
     public InitializeModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -131,67 +143,26 @@ public class InitializeModule extends BaseModule {
      *
      */
 
-    public void init(int logLevel) {
-        WritableMap map = Arguments.createMap();
+    public void init(int logLevel, Promise promise) {
         try {
+            MultiDex.install(context);
             ApplicationInfo info = context.getPackageManager().getApplicationInfo(context.getPackageName(),
                     PackageManager.GET_META_DATA);
-            int appid = info.metaData.getInt("IM_APPID");
-            this.setPushKey(info);
-            boolean init = InitializeBusiness.init(context, appid, BaseConfigs.getDefaultConfigs());
+            setPushKey(info);
+            int im_appidd = info.metaData.getInt("IM_APPID");
+            TIMConfigs configs = TIMConfigs.getConfigs();
+            V2TIMSDKConfig sdkConfig = new V2TIMSDKConfig();
+            sdkConfig.setLogLevel(logLevel);
+            configs.setSdkConfig(sdkConfig);
+            TIMInitUtil.init(context, im_appidd, configs);
+            HeytapPushManager.init(this.getReactApplicationContext(), true);
             //添加自定初始化配置
             customConfig();
             setPushConfig();
+            promise.resolve(new ResultVO(1000, "Initialization Succeed"));
 
-            if(IMFunc.isBrandHuawei()){
-                // 华为离线推送
-                HMSAgent.connect(getCurrentActivity(), new ConnectHandler() {
-                    @Override
-                    public void onConnect(int rst) {
-                        QLog.i("huaweipush", "HMS connect end:" + rst);
-                    }
-                });
-                getHuaWeiPushToken();
-            }
-            if(IMFunc.isBrandVivo()){
-                // vivo离线推送
-                PushClient.getInstance(IMApplication.getContext()).turnOnPush(new IPushActionListener() {
-                    @Override
-                    public void onStateChanged(int state) {
-                        if(state == 0){
-                            String regId = PushClient.getInstance(IMApplication.getContext()).getRegId();
-                            QLog.i("vivopush", "open vivo push success regId = " + regId);
-                            ThirdPushTokenMgr.getInstance().setThirdPushToken(regId);
-                            ThirdPushTokenMgr.getInstance().setPushTokenToTIM();
-                        }else {
-                            // 根据vivo推送文档说明，state = 101 表示该vivo机型或者版本不支持vivo推送，链接：https://dev.vivo.com.cn/documentCenter/doc/156
-                            QLog.i("vivopush", "open vivo push fail state = " + state);
-                        }
-                    }
-                });
-            }
-
-            QLog.i("初始化", "结果：" + init);
-            if (init) {
-                map.putInt("code", 0);
-                map.putString("msg", "IM初始化成功");
-                sendEvent(IMEventNameConstant.INITIALIZE_STATUS, map);
-            } else {
-                map.putInt("code", -1);
-                map.putString("msg", "IM初始化失败: 未知错误");
-                sendEvent(IMEventNameConstant.INITIALIZE_STATUS, map);
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-            map.putInt("code", -1);
-            map.putString("msg", e.getMessage());
-            sendEvent(IMEventNameConstant.INITIALIZE_STATUS, map);
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            map.putInt("code", -1);
-            map.putString("msg", ex.getMessage());
-            sendEvent(IMEventNameConstant.INITIALIZE_STATUS, map);
+        } catch (Exception e) {
+            promise.reject("0", e.getMessage(), e);
         }
     }
 
@@ -217,87 +188,48 @@ public class InitializeModule extends BaseModule {
         }
     }
 
-    private ArrayList<CustomFaceGroupConfigs> initCustomConfig() {
-        ArrayList<CustomFaceGroupConfigs> groupFaces = new ArrayList<>();
-        //创建一个表情组对象
-        CustomFaceGroupConfigs faceConfigs = new CustomFaceGroupConfigs();
-        //设置表情组每页可显示的表情列数
-        faceConfigs.setPageColumnCount(5);
-        //设置表情组每页可显示的表情行数
-        faceConfigs.setPageRowCount(2);
-        //设置表情组号
-        faceConfigs.setFaceGroupId(1);
-        //设置表情组的主ICON
-        faceConfigs.setFaceIconPath("4349/xx07@2x.png");
-        //设置表情组的名称
-        faceConfigs.setFaceIconName("4350");
-        for (int i = 1; i <= 15; i++) {
-            //创建一个表情对象
-            FaceConfig faceConfig = new FaceConfig();
-            String index = "" + i;
-            if (i < 10)
-                index = "0" + i;
-            //设置表情所在Asset目录下的路径
-            faceConfig.setAssetPath("4349/xx" + index + "@2x.png");
-            //设置表情所名称
-            faceConfig.setFaceName("xx" + index + "@2x");
-            //设置表情宽度
-            faceConfig.setFaceWidth(240);
-            //设置表情高度
-            faceConfig.setFaceHeight(240);
-            faceConfigs.addFaceConfig(faceConfig);
-        }
-        groupFaces.add(faceConfigs);
-
-
-        faceConfigs = new CustomFaceGroupConfigs();
-        faceConfigs.setPageColumnCount(5);
-        faceConfigs.setPageRowCount(2);
-        faceConfigs.setFaceGroupId(1);
-        faceConfigs.setFaceIconPath("4350/tt01@2x.png");
-        faceConfigs.setFaceIconName("4350");
-        for (int i = 1; i <= 16; i++) {
-            FaceConfig faceConfig = new FaceConfig();
-            String index = "" + i;
-            if (i < 10)
-                index = "0" + i;
-            faceConfig.setAssetPath("4350/tt" + index + "@2x.png");
-            faceConfig.setFaceName("tt" + index + "@2x");
-            faceConfig.setFaceWidth(240);
-            faceConfig.setFaceHeight(240);
-            faceConfigs.addFaceConfig(faceConfig);
-        }
-        groupFaces.add(faceConfigs);
-
-
-        return groupFaces;
-    }
-
 
     private void setPushConfig() {
-        if (SessionWrapper.isMainProcess(context)) {
-            TIMManager.getInstance().setOfflinePushListener(notification -> {
-                //消息被设置为需要提醒
-                notification.doNotify(context.getApplicationContext(), R.drawable.fw_ic_launcher);
+        if (BrandUtil.isBrandXiaoMi()) {
+            // 小米离线推送
+            MiPushClient.registerPush(this.getReactApplicationContext(), ConstantsKey.XM_PUSH_APPID, ConstantsKey.XM_PUSH_APPKEY);
+        } else if (BrandUtil.isBrandHuawei()) {
+            // 华为离线推送，设置是否接收Push通知栏消息调用示例
+            HmsMessaging.getInstance(this.getReactApplicationContext()).turnOnPush().addOnCompleteListener(new com.huawei.hmf.tasks.OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(com.huawei.hmf.tasks.Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        TIMLog.i(TAG, "huawei turnOnPush Complete");
+                    } else {
+                        TIMLog.e(TAG, "huawei turnOnPush failed: ret=" + task.getException().getMessage());
+                    }
+                }
             });
+        } else if (MzSystemUtils.isBrandMeizu(this.getReactApplicationContext())) {
+            // 魅族离线推送
+            PushManager.register(this.getReactApplicationContext(), ConstantsKey.MZ_PUSH_APPID, ConstantsKey.MZ_PUSH_APPKEY);
+        } else if (BrandUtil.isBrandVivo()) {
+            // vivo离线推送
+            PushClient.getInstance(this.getReactApplicationContext()).initialize();
+        } else if (HeytapPushManager.isSupportPush()) {
+            // oppo离线推送，因为需要登录成功后向我们后台设置token，所以注册放在MainActivity中做
+        } else if (BrandUtil.isGoogleServiceSupport(this.getReactApplicationContext())) {
+            FirebaseInstanceId.getInstance().getInstanceId()
+                    .addOnCompleteListener(new com.google.android.gms.tasks.OnCompleteListener<InstanceIdResult>() {
+                        @Override
+                        public void onComplete(Task<InstanceIdResult> task) {
+                            if (!task.isSuccessful()) {
+                                TIMLog.w(TAG, "getInstanceId failed exception = " + task.getException());
+                                return;
+                            }
+                            // Get new Instance ID token
+                            String token = task.getResult().getToken();
+                            TIMLog.i(TAG, "google fcm getToken = " + token);
 
-            if (IMFunc.isBrandXiaoMi()) {
-                // 小米离线推送
-                MiPushClient.registerPush(context, ConstantsKey.XM_PUSH_APPID, ConstantsKey.XM_PUSH_APPKEY);
-            }
-            if (IMFunc.isBrandHuawei()) {
-                // 华为离线推送
-                HMSAgent.init((Application) IMApplication.getContext());
-            }
-            if (MzSystemUtils.isBrandMeizu(context)) {
-                // 魅族离线推送
-                PushManager.register(context, ConstantsKey.MZ_PUSH_APPID, ConstantsKey.MZ_PUSH_APPKEY);
-            }
-            if (IMFunc.isBrandVivo()) {
-                // vivo离线推送
-                PushClient.getInstance(IMApplication.getContext()).initialize();
-            }
-        }
+                            ThirdPushTokenMgr.getInstance().setThirdPushToken(token);
+                        }
+                    });
+        };
     }
 
     private void setPushKey(ApplicationInfo info) {
@@ -314,14 +246,6 @@ public class InitializeModule extends BaseModule {
         ConstantsKey.MZ_PUSH_BUZID = info.metaData.getInt("MZ_PUSH_BUZID", 0);
     }
 
-    private void getHuaWeiPushToken() {
-        HMSAgent.Push.getToken(new GetTokenHandler() {
-            @Override
-            public void onResult(int rtnCode) {
-                QLog.i("huaweipush", "get token: end" + rtnCode);
-            }
-        });
-    }
 
     @Override
     public Map<String, Object> getConstants() {
@@ -348,5 +272,123 @@ public class InitializeModule extends BaseModule {
         constants.put("Face", MessageInfo.MSG_TYPE_CUSTOM_FACE);
         constants.put("Custom", MessageInfo.MSG_TYPE_CUSTOM);
         return constants;
+    }
+
+
+    public TIMConfigs getConfigs() {
+        GeneralConfig config = new GeneralConfig();
+        // 显示对方是否已读的view将会展示
+        config.setShowRead(true);
+        config.setAppCacheDir(getReactApplicationContext().getFilesDir().getPath());
+        if (new File(Environment.getExternalStorageDirectory() + "/TXIM").exists()) {
+            config.setTestEnv(true);
+        }
+        TIMInitUtil.getConfigs().setGeneralConfig(config);
+        TIMInitUtil.getConfigs().setCustomFaceConfig(initCustomFaceConfig());
+        return TIMInitUtil.getConfigs();
+    }
+
+    class StatisticActivityLifecycleCallback implements Application.ActivityLifecycleCallbacks {
+        private int foregroundActivities = 0;
+        private boolean isChangingConfiguration;
+        private IMEventListener mIMEventListener = new IMEventListener() {
+            @Override
+            public void onNewMessage(V2TIMMessage msg) {
+                String imSdkVersion = V2TIMManager.getInstance().getVersion();
+                // IMSDK 5.0.1及以后版本 doBackground 之后同时会离线推送
+                if (TUIKitUtils.compareVersion(imSdkVersion, "5.0.1") < 0) {
+                    MessageNotification notification = MessageNotification.getInstance();
+                    notification.notify(msg);
+                }
+            }
+        };
+
+        private ConversationManagerKit.MessageUnreadWatcher mUnreadWatcher = new ConversationManagerKit.MessageUnreadWatcher() {
+            @Override
+            public void updateUnread(int count) {
+                // 华为离线推送角标
+                HUAWEIHmsMessageService.updateBadge(DemoApplication.this, count);
+            }
+        };
+
+        @Override
+        public void onActivityCreated(Activity activity, Bundle bundle) {
+            DemoLog.i(TAG, "onActivityCreated bundle: " + bundle);
+            if (bundle != null) { // 若bundle不为空则程序异常结束
+                // 重启整个程序
+                Intent intent = new Intent(activity, SplashActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        }
+
+        @Override
+        public void onActivityStarted(Activity activity) {
+            foregroundActivities++;
+            if (foregroundActivities == 1 && !isChangingConfiguration) {
+                // 应用切到前台
+                DemoLog.i(TAG, "application enter foreground");
+                V2TIMManager.getOfflinePushManager().doForeground(new V2TIMCallback() {
+                    @Override
+                    public void onError(int code, String desc) {
+                        DemoLog.e(TAG, "doForeground err = " + code + ", desc = " + desc);
+                    }
+
+                    @Override
+                    public void onSuccess() {
+                        DemoLog.i(TAG, "doForeground success");
+                    }
+                });
+                TUIKit.removeIMEventListener(mIMEventListener);
+                ConversationManagerKit.getInstance().removeUnreadWatcher(mUnreadWatcher);
+                MessageNotification.getInstance().cancelTimeout();
+            }
+            isChangingConfiguration = false;
+        }
+
+        @Override
+        public void onActivityResumed(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivityPaused(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivityStopped(Activity activity) {
+            foregroundActivities--;
+            if (foregroundActivities == 0) {
+                // 应用切到后台
+                DemoLog.i(TAG, "application enter background");
+                int unReadCount = ConversationManagerKit.getInstance().getUnreadTotal();
+                V2TIMManager.getOfflinePushManager().doBackground(unReadCount, new V2TIMCallback() {
+                    @Override
+                    public void onError(int code, String desc) {
+                        DemoLog.e(TAG, "doBackground err = " + code + ", desc = " + desc);
+                    }
+
+                    @Override
+                    public void onSuccess() {
+                        DemoLog.i(TAG, "doBackground success");
+                    }
+                });
+                // 应用退到后台，消息转化为系统通知
+                TUIKit.addIMEventListener(mIMEventListener);
+                ConversationManagerKit.getInstance().addUnreadWatcher(mUnreadWatcher);
+            }
+            isChangingConfiguration = activity.isChangingConfigurations();
+        }
+
+        @Override
+        public void onActivitySaveInstanceState(Activity activity, Bundle bundle) {
+
+        }
+
+        @Override
+        public void onActivityDestroyed(Activity activity) {
+
+        }
     }
 }

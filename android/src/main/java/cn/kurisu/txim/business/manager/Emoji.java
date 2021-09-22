@@ -1,15 +1,19 @@
-package cn.kurisu.txim.business.config;
+package cn.kurisu.txim.business.manager;
 
 import android.graphics.Bitmap;
 
-
-import cn.kurisu.txim.utils.UIUtils;
-
 import java.io.Serializable;
+
+import cn.kurisu.txim.utils.ScreenUtil;
 
 public class Emoji implements Serializable {
 
-    private static final int deaultSize = UIUtils.getPxByDp(32);
+    private static final int deaultSize = ScreenUtil.getPxByDp(32);
+    private String desc;
+    private String filter;
+    private Bitmap icon;
+    private int width = deaultSize;
+    private int height = deaultSize;
 
     public String getDesc() {
         return desc;
@@ -50,11 +54,5 @@ public class Emoji implements Serializable {
     public void setHeight(int height) {
         this.height = height;
     }
-
-    private String desc;
-    private String filter;
-    private Bitmap icon;
-    private int width = deaultSize;
-    private int height = deaultSize;
 
 }

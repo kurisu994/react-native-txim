@@ -11,28 +11,26 @@ import com.meizu.cloud.pushsdk.platform.message.RegisterStatus;
 import com.meizu.cloud.pushsdk.platform.message.SubAliasStatus;
 import com.meizu.cloud.pushsdk.platform.message.SubTagsStatus;
 import com.meizu.cloud.pushsdk.platform.message.UnRegisterStatus;
-import com.tencent.imsdk.log.QLog;
-
-/**
- * Created by vinsonswang on 2019/2/27.
- */
+import com.tencent.qcloud.tim.demo.utils.DemoLog;
 
 public class MEIZUPushReceiver extends MzPushMessageReceiver {
-    private static final String TAG = "MEIZUPushReceiver";
+
+    private static final String TAG = MEIZUPushReceiver.class.getSimpleName();
+
     @Override
     public void onMessage(Context context, String s) {
-        QLog.i(TAG, "onMessage method1 msg = " + s);
+        DemoLog.i(TAG, "onMessage method1 msg = " + s);
     }
 
     @Override
     public void onMessage(Context context, String message, String platformExtra) {
-        QLog.i(TAG, "onMessage method2 msg = " + message + ", platformExtra = " + platformExtra);
+        DemoLog.i(TAG, "onMessage method2 msg = " + message + ", platformExtra = " + platformExtra);
     }
 
     @Override
     public void onMessage(Context context, Intent intent) {
         String content = intent.getExtras().toString();
-        QLog.i(TAG, "flyme3 onMessage = " + content);
+        DemoLog.i(TAG, "flyme3 onMessage = " + content);
     }
 
     @Override
@@ -42,7 +40,7 @@ public class MEIZUPushReceiver extends MzPushMessageReceiver {
 
     @Override
     public void onNotificationClicked(Context context, MzPushMessage mzPushMessage) {
-        QLog.i(TAG, "onNotificationClicked");
+        DemoLog.i(TAG, "onNotificationClicked mzPushMessage " + mzPushMessage.toString());
     }
 
     @Override
@@ -67,7 +65,7 @@ public class MEIZUPushReceiver extends MzPushMessageReceiver {
 
     @Override
     public void onRegisterStatus(Context context, RegisterStatus registerStatus) {
-        QLog.i(TAG, "onRegisterStatus token = " + registerStatus.getPushId());
+        DemoLog.i(TAG, "onRegisterStatus token = " + registerStatus.getPushId());
         ThirdPushTokenMgr.getInstance().setThirdPushToken(registerStatus.getPushId());
         ThirdPushTokenMgr.getInstance().setPushTokenToTIM();
 

@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.facebook.react.ReactPackage;
+import com.facebook.react.bridge.JavaScriptModule;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 
@@ -33,6 +34,12 @@ public class IMPackage implements ReactPackage {
         modules.add(initializeModule);
         modules.add(new MessageModule(reactContext));
         return modules;
+    }
+
+    // Deprecated in RN 0.47
+    @Override
+    public List<Class<? extends JavaScriptModule>> createJSModules() {
+        return Collections.emptyList();
     }
 
     @Override
