@@ -2,52 +2,48 @@
 buildscript {
     if (rootProject.buildDir == project.buildDir) {
         repositories {
+            maven { url 'https://maven.aliyun.com/repository/google' }
+            maven { url "https://maven.aliyun.com/repository/public" }
             google()
-            jcenter()
+            mavenCentral()
         }
         dependencies {
-            classpath 'com.android.tools.build:gradle:3.4.0'
+            classpath 'com.android.tools.build:gradle:3.5.4'
         }
     }
+}
+
+def getExtOrDefault(name) {
+    return rootProject.ext.has(name) ? rootProject.ext.get(name) : project.properties['RNTxim_' + name]
+}
+
+def getExtOrIntegerDefault(name) {
+    return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties['RNTxim_' + name]).toInteger()
 }
 
 apply plugin: 'com.android.library'
 
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion getExtOrIntegerDefault('compileSdkVersion')
+    buildToolsVersion getExtOrDefault('buildToolsVersion')
+
     defaultConfig {
-        minSdkVersion 17
-        targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
-        multiDexEnabled true
+        minSdkVersion getExtOrIntegerDefault('minSdkVersion')
+        targetSdkVersion getExtOrIntegerDefault('targetSdkVersion')
     }
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
     repositories {
-        mavenLocal()
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url "https://maven.aliyun.com/repository/public" }
         google()
-        jcenter()
-        maven {
-            // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
-            url "$rootDir/../node_modules/react-native/android"
-        }
-    }
-    compileOptions {
-        targetCompatibility 1.8
-        sourceCompatibility 1.8
+        mavenCentral()
     }
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'androidx.multidex:multidex:2.0.0'
+    implementation 'com.facebook.react:react-native:+'
     implementation 'com.facebook.react:react-native:+'
     implementation 'androidx.appcompat:appcompat:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
@@ -62,7 +58,8 @@ dependencies {
     implementation 'com.github.promeg:tinypinyin:1.0.0'
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.2'
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.2'
-
+    // txim
+    implementation 'com.tencent.imsdk:imsdk:5.6+'
     // HUAWEI push sdk
     implementation 'com.huawei.android.hms:push:2.6.3.301'
     implementation 'com.huawei.android.hms:base:2.6.3.301'
@@ -71,5 +68,4 @@ dependencies {
     // bugly sdk
     implementation 'com.tencent.bugly:crashreport:2.6.6'
     implementation 'com.tencent.bugly:nativecrashreport:3.3.1'
-    implementation 'com.tencent.imsdk:imsdk:4.7.1'
 }
