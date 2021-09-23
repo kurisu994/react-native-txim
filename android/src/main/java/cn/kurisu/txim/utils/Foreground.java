@@ -49,12 +49,15 @@ public class Foreground implements Application.ActivityLifecycleCallbacks {
         paused = true;
         if (check != null)
             handler.removeCallbacks(check);
-        handler.postDelayed(check = () -> {
-            if (foreground && paused) {
-                foreground = false;
-                Log.i(TAG, "went background");
-            } else {
-                Log.i(TAG, "still foreground");
+        handler.postDelayed(check = new Runnable() {
+            @Override
+            public void run() {
+                if (foreground && paused) {
+                    foreground = false;
+                    Log.i(TAG, "went background");
+                } else {
+                    Log.i(TAG, "still foreground");
+                }
             }
         }, CHECK_DELAY);
 

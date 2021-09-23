@@ -1,19 +1,25 @@
 package cn.kurisu.txim.utils.thirdpush;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 
+import com.google.gson.Gson;
 import com.xiaomi.mipush.sdk.MiPushMessage;
 import com.xiaomi.mipush.sdk.PushMessageHelper;
 
 import java.util.Map;
 import java.util.Set;
 
+import cn.kurisu.txim.IMApplication;
+import cn.kurisu.txim.R;
+import cn.kurisu.txim.pojo.OfflineMessageBean;
+import cn.kurisu.txim.pojo.OfflineMessageContainerBean;
 import cn.kurisu.txim.utils.BrandUtil;
 import cn.kurisu.txim.utils.TIMLog;
-import cn.kurisu.txim.pojo.OfflineMessageBean;
+import cn.kurisu.txim.utils.ToastUtil;
 
 public class OfflineMessageDispatcher {
 
@@ -98,14 +104,15 @@ public class OfflineMessageDispatcher {
     }
 
     private static OfflineMessageBean offlineMessageBeanValidCheck(OfflineMessageBean bean) {
+        Context context = IMApplication.getInstance().getContext();
         if (bean == null) {
             return null;
         } else if (bean.version != 1
                 || (bean.action != OfflineMessageBean.REDIRECT_ACTION_CHAT
                     && bean.action != OfflineMessageBean.REDIRECT_ACTION_CALL) ) {
-            PackageManager packageManager = DemoApplication.instance().getPackageManager();
-            String label = String.valueOf(packageManager.getApplicationLabel(DemoApplication.instance().getApplicationInfo()));
-            ToastUtil.toastLongMessage(DemoApplication.instance().getString(R.string.you_app) + label + DemoApplication.instance().getString(R.string.low_version));
+            PackageManager packageManager = context.getPackageManager();
+            String label = String.valueOf(packageManager.getApplicationLabel(context.getApplicationInfo()));
+            ToastUtil.toastLongMessage(context.getString(R.string.you_app) + label + context.getString(R.string.low_version));
             TIMLog.e(TAG, "unknown version: " + bean.version + " or action: " + bean.action);
             return null;
         }
@@ -114,23 +121,12 @@ public class OfflineMessageDispatcher {
 
     public static boolean redirect(final OfflineMessageBean bean) {
         if (bean.action == OfflineMessageBean.REDIRECT_ACTION_CHAT) {
-            ChatInfo chatInfo = new ChatInfo();
-            chatInfo.setType(bean.chatType);
-            chatInfo.setId(bean.sender);
-            chatInfo.setChatName(bean.nickname);
-            Intent chatIntent = new Intent(DemoApplication.instance(), ChatActivity.class);
-            chatIntent.putExtra(Constants.CHAT_INFO, chatInfo);
-            chatIntent.putExtra(Constants.IS_OFFLINE_PUSH_JUMP, true);
-            chatIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            Intent mainIntent = new Intent(DemoApplication.instance(), MainActivity.class);
-            mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            DemoApplication.instance().startActivities(new Intent[]{mainIntent, chatIntent});
             return true;
         } else if (bean.action == OfflineMessageBean.REDIRECT_ACTION_CALL) {
-            IBaseLiveListener baseCallListener = TUIKitLiveListenerManager.getInstance().getBaseCallListener();
-            if (baseCallListener != null) {
-                baseCallListener.redirectCall(bean);
-            }
+//            IBaseLiveListener baseCallListener = TUIKitLiveListenerManager.getInstance().getBaseCallListener();
+//            if (baseCallListener != null) {
+//                baseCallListener.redirectCall(bean);
+//            }
         }
         return true;
     }

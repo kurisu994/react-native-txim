@@ -233,6 +233,8 @@
     <string name="auto_judge">Auto Approval...</string>
     <string name="audio_call">Voice Call</string>
 
+    <string name="you_app">Your App</string>
+    <string name="low_version"> The version is too low. Unable to open the offline message.</string>
 
     <!-- 搜索 -->
     <string name="search">Search</string>

@@ -17,7 +17,6 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
 
-import cn.kurisu.txim.pojo.ResultVO;
 import cn.kurisu.txim.business.conversation.ConversationManagerKit;
 import cn.kurisu.txim.configs.GeneralConfig;
 import cn.kurisu.txim.configs.TIMConfigs;
@@ -32,6 +31,7 @@ import cn.kurisu.txim.listener.MessageEventListener;
 import cn.kurisu.txim.listener.MessageRevokedListener;
 import cn.kurisu.txim.listener.RefreshListener;
 import cn.kurisu.txim.listener.UserStatusListener;
+import cn.kurisu.txim.pojo.ResultVO;
 import cn.kurisu.txim.utils.BrandUtil;
 import cn.kurisu.txim.utils.TIMInitUtil;
 import cn.kurisu.txim.utils.TIMLog;

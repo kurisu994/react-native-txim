@@ -233,7 +233,8 @@
     <string name="auto_judge">自动审批...</string>
     <string name="audio_call">语音通话</string>
 
-
+    <string name="you_app">您的应用</string>
+    <string name="low_version"> 版本太低，不支持打开该离线消息</string>
     <!-- 搜索 -->
     <string name="search">搜索</string>
     <string name="contact_subtitle">联系人</string>

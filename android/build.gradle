@@ -35,6 +35,25 @@ android {
     defaultConfig {
         minSdkVersion getExtOrIntegerDefault('minSdkVersion')
         targetSdkVersion getExtOrIntegerDefault('targetSdkVersion')
+        manifestPlaceholders = [
+                IM_APPID        : getExtOrDefault('ImAppId'),
+                //小米
+                XM_PUSH_APPKEY: getExtOrDefault('XmAppkey'),
+                XM_PUSH_APPID: getExtOrDefault('XmAppId'),
+                XM_PUSH_BUZID: getExtOrIntegerDefault('XmPushBuzId'),
+                //华为
+                HW_PUSH_BUZID: getExtOrIntegerDefault('HwPushBuzId'),
+                HW_PUSH_APPID: getExtOrDefault('HwAppId'),
+                //魅族
+                MZ_PUSH_BUZID: getExtOrIntegerDefault('MzPushBuzId'),
+                MZ_PUSH_APPID: getExtOrDefault('MzAppId'),
+                MZ_PUSH_APPKEY: getExtOrDefault('MzAppKey'),
+                //vivo
+                VIVO_PUSH_BUZID: getExtOrIntegerDefault('VivoPushBuzId'),
+                VIVO_PUSH_APPID: getExtOrDefault('VivoAppId'),
+                VIVO_PUSH_APPKEY: getExtOrDefault('VivoAppKey')
+
+        ]
     }
 
     repositories {
@@ -55,7 +74,7 @@ dependencies {
     // txim
     implementation 'com.tencent.imsdk:imsdk:5.6.+'
     implementation 'com.tencent.imsdk:imsdk-plus:5.6.+'
-
+    implementation 'com.google.code.gson:gson:2.8.5'
     // google firebase
     implementation('com.google.firebase:firebase-core:17.0.0')
     // google 云消息传递

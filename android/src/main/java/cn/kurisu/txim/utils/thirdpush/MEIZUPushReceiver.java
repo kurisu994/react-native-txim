@@ -11,7 +11,8 @@ import com.meizu.cloud.pushsdk.platform.message.RegisterStatus;
 import com.meizu.cloud.pushsdk.platform.message.SubAliasStatus;
 import com.meizu.cloud.pushsdk.platform.message.SubTagsStatus;
 import com.meizu.cloud.pushsdk.platform.message.UnRegisterStatus;
-import com.tencent.qcloud.tim.demo.utils.DemoLog;
+
+import cn.kurisu.txim.utils.TIMLog;
 
 public class MEIZUPushReceiver extends MzPushMessageReceiver {
 
@@ -19,18 +20,18 @@ public class MEIZUPushReceiver extends MzPushMessageReceiver {
 
     @Override
     public void onMessage(Context context, String s) {
-        DemoLog.i(TAG, "onMessage method1 msg = " + s);
+        TIMLog.i(TAG, "onMessage method1 msg = " + s);
     }
 
     @Override
     public void onMessage(Context context, String message, String platformExtra) {
-        DemoLog.i(TAG, "onMessage method2 msg = " + message + ", platformExtra = " + platformExtra);
+        TIMLog.i(TAG, "onMessage method2 msg = " + message + ", platformExtra = " + platformExtra);
     }
 
     @Override
     public void onMessage(Context context, Intent intent) {
         String content = intent.getExtras().toString();
-        DemoLog.i(TAG, "flyme3 onMessage = " + content);
+        TIMLog.i(TAG, "flyme3 onMessage = " + content);
     }
 
     @Override
@@ -40,7 +41,7 @@ public class MEIZUPushReceiver extends MzPushMessageReceiver {
 
     @Override
     public void onNotificationClicked(Context context, MzPushMessage mzPushMessage) {
-        DemoLog.i(TAG, "onNotificationClicked mzPushMessage " + mzPushMessage.toString());
+        TIMLog.i(TAG, "onNotificationClicked mzPushMessage " + mzPushMessage.toString());
     }
 
     @Override
@@ -65,7 +66,7 @@ public class MEIZUPushReceiver extends MzPushMessageReceiver {
 
     @Override
     public void onRegisterStatus(Context context, RegisterStatus registerStatus) {
-        DemoLog.i(TAG, "onRegisterStatus token = " + registerStatus.getPushId());
+        TIMLog.i(TAG, "onRegisterStatus token = " + registerStatus.getPushId());
         ThirdPushTokenMgr.getInstance().setThirdPushToken(registerStatus.getPushId());
         ThirdPushTokenMgr.getInstance().setPushTokenToTIM();
 
