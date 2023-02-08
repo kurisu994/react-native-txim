@@ -4,6 +4,8 @@
 [![Slack](https://img.shields.io/badge/slack-996icu-green.svg?style=flat-square)](https://join.slack.com/t/996icu/shared_invite/enQtNjI0MjEzMTUxNDI0LTkyMGViNmJiZjYwOWVlNzQ3NmQ4NTQyMDRiZTNmOWFkMzYxZWNmZGI0NDA4MWIwOGVhOThhMzc3NGQyMDBhZDc)
 [![HitCount](http://hits.dwyl.io/996icu/996.ICU.svg)](http://hits.dwyl.io/996icu/996.ICU)
 
+# 鉴于官方发布了rn的版本，本项目不在维护。有需要的可以使用 [官方版本](https://github.com/TencentCloud/TIMSDK/tree/master/ReactNative)
+
 ## 如何安装
 
 ### 1.首先安装npm包
